@@ -4,6 +4,8 @@ file(REMOVE_RECURSE
   "CalcFigure_autogen"
   "CMakeFiles/CalcFigure.dir/CalcFigure_autogen/mocs_compilation.cpp.o"
   "CMakeFiles/CalcFigure.dir/CalcFigure_autogen/mocs_compilation.cpp.o.d"
+  "CMakeFiles/CalcFigure.dir/figurearea.cpp.o"
+  "CMakeFiles/CalcFigure.dir/figurearea.cpp.o.d"
   "CMakeFiles/CalcFigure.dir/main.cpp.o"
   "CMakeFiles/CalcFigure.dir/main.cpp.o.d"
   "CMakeFiles/CalcFigure.dir/mainwindow.cpp.o"
