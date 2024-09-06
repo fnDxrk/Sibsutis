@@ -6,21 +6,98 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>600</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>290</y>
+      <width>80</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Вычислить</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>60</y>
+      <width>251</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>Квадрат</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Прямоугольник</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Параллелограмм</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Ромб</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Треугольник</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Трапеция</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Круг</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Сектор</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="labelImage">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>40</y>
+      <width>131</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>600</width>
      <height>23</height>
     </rect>
    </property>
