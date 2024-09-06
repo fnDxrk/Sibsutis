@@ -12,3 +12,9 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_menu_3_triggered()
+{
+    QApplication::quit();
+}
+

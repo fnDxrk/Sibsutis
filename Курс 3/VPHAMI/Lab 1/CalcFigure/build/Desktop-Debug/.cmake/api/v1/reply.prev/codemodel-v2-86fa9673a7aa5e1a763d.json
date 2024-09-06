@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-c318ffff6afd012db279.json",
+					"jsonFile" : "directory-.-Debug-1dd70f6061c120ea3e8c.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -44,7 +44,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "CalcFigure::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-CalcFigure-Debug-c343f656aadf483bb82d.json",
+					"jsonFile" : "target-CalcFigure-Debug-ed9f38b7055ff96a4c1c.json",
 					"name" : "CalcFigure",
 					"projectIndex" : 0
 				},

@@ -2,6 +2,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/CalcFigure_autogen.dir/AutogenUsed.txt"
   "CMakeFiles/CalcFigure_autogen.dir/ParseCache.txt"
   "CalcFigure_autogen"
+  "CMakeFiles/CalcFigure.dir/CalcFigure_autogen/EWIEGA46WW/qrc_Resourse.cpp.o"
+  "CMakeFiles/CalcFigure.dir/CalcFigure_autogen/EWIEGA46WW/qrc_Resourse.cpp.o.d"
   "CMakeFiles/CalcFigure.dir/CalcFigure_autogen/mocs_compilation.cpp.o"
   "CMakeFiles/CalcFigure.dir/CalcFigure_autogen/mocs_compilation.cpp.o.d"
   "CMakeFiles/CalcFigure.dir/figurearea.cpp.o"
@@ -12,6 +14,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/CalcFigure.dir/mainwindow.cpp.o.d"
   "CalcFigure"
   "CalcFigure.pdb"
+  "CalcFigure_autogen/EWIEGA46WW/qrc_Resourse.cpp"
   "CalcFigure_autogen/mocs_compilation.cpp"
   "CalcFigure_autogen/timestamp"
 )

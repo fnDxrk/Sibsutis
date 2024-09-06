@@ -405,7 +405,8 @@
 		"/usr/lib/cmake/Qt6Widgets/Qt6WidgetsVersionlessTargets.cmake",
 		"/usr/lib/cmake/Qt6Widgets/Qt6WidgetsMacros.cmake",
 		"/usr/lib/cmake/Qt6Widgets/Qt6WidgetsPlugins.cmake",
-		"/usr/share/cmake/Modules/GNUInstallDirs.cmake"
+		"/usr/share/cmake/Modules/GNUInstallDirs.cmake",
+		"/home/dxrk_/Documents/Sibsutis/\u041a\u0443\u0440\u0441 3/VPHAMI/Lab 1/CalcFigure/Resourse.qrc"
 	],
 	"CMAKE_SOURCE_DIR" : "/home/dxrk_/Documents/Sibsutis/\u041a\u0443\u0440\u0441 3/VPHAMI/Lab 1/CalcFigure",
 	"CROSS_CONFIG" : false,
