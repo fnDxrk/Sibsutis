@@ -119,9 +119,9 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
+           <layout class="QHBoxLayout" name="lineArg_1">
             <item>
-             <widget class="QLabel" name="label_3">
+             <widget class="QLabel" name="text_1">
               <property name="minimumSize">
                <size>
                 <width>90</width>
@@ -134,7 +134,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit">
+             <widget class="QLineEdit" name="line_1">
               <property name="minimumSize">
                <size>
                 <width>150</width>
@@ -149,9 +149,9 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <layout class="QHBoxLayout" name="lineArg_2">
             <item>
-             <widget class="QLabel" name="label_4">
+             <widget class="QLabel" name="text_2">
               <property name="minimumSize">
                <size>
                 <width>90</width>
@@ -164,7 +164,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_2">
+             <widget class="QLineEdit" name="line_2">
               <property name="minimumSize">
                <size>
                 <width>150</width>
@@ -179,9 +179,9 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <layout class="QHBoxLayout" name="lineArg_3">
             <item>
-             <widget class="QLabel" name="label_5">
+             <widget class="QLabel" name="text_3">
               <property name="minimumSize">
                <size>
                 <width>90</width>
@@ -194,7 +194,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_3">
+             <widget class="QLineEdit" name="line_3">
               <property name="minimumSize">
                <size>
                 <width>150</width>
@@ -294,7 +294,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QLabel" name="label_2">
+           <widget class="QLabel" name="Square">
             <property name="minimumSize">
              <size>
               <width>90</width>
@@ -302,12 +302,12 @@
              </size>
             </property>
             <property name="text">
-             <string>Периметр</string>
+             <string>Площадь</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_4">
+           <widget class="QLineEdit" name="Result">
             <property name="minimumSize">
              <size>
               <width>150</width>
