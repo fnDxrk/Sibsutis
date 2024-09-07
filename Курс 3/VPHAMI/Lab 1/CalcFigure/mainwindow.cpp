@@ -99,6 +99,40 @@ void MainWindow::on_comboBox_activated(int index)
 
 void MainWindow::on_pushButton_clicked()
 {
+    double result = 0.0;
+    int index = ui->comboBox->currentIndex();
 
+    double value_1 = ui->line_1->text().toDouble();
+    double value_2 = ui->line_2->text().toDouble();
+    double value_3 = ui->line_3->text().toDouble();
+
+    switch (index) {
+    case 0:
+        result = FigureArea::squareArea(value_1);
+        break;
+    case 1:
+        result = FigureArea::rectangleArea(value_1, value_2);
+        break;
+    case 2:
+        result = FigureArea::parallelogramArea(value_1, value_2);
+        break;
+    case 3:
+        result = FigureArea::rhombusArea(value_1, value_2);
+        break;
+    case 4:
+        result = FigureArea::triangleArea(value_1, value_2);
+        break;
+    case 5:
+        result = FigureArea::trapezoidArea(value_1, value_2, value_3);
+        break;
+    case 6:
+        result = FigureArea::circleArea(value_1);
+        break;
+    case 7:
+        result = FigureArea::sektorArea(value_1, value_2);
+        break;
+    }
+
+    ui->Result->setText(QString::number(result));
 }
 

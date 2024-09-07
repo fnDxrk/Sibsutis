@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "figurearea.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -28,6 +29,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
 
     // Массив изображений фигур
     QStringList images;
