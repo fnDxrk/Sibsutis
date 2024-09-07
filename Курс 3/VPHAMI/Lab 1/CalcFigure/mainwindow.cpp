@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "figurearea.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -39,4 +40,8 @@ void MainWindow::on_comboBox_activated(int index)
     }
 }
 
+void MainWindow::on_pushButton_clicked()
+{
+
+}
 
