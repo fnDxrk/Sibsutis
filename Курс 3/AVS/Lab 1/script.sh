@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "OS          $(lsb_release -sd | tr -d '"')"
+echo -e "OS          $(lsb_release -sd | xargs)"
 echo -e "Kernel      $(uname -srm)\n"
 
 echo -e "CPU         $(lscpu | grep "Имя модели" | cut -d ':' -f2 | xargs)"
@@ -16,5 +16,9 @@ echo -e "User        $(whoami)"
 echo -e "IP          $(ip -br a show | grep UP | xargs | cut -d " " -f3)"
 echo -e "MAC address $(ip a | grep ether | tail -n 1 | xargs | cut -d " " -f3)\n"
 
-echo -e "$(df -h | grep ^/dev/ | awk '{printf "%-10s %-10s %s/%s\n", $6, $2, $3, $4}')"
+echo -e "$(df -h | grep ^/dev/ | awk '{printf "%-10s %-10s %s/%s\n", $6, $2, $3, $4}')\n"
+
+echo -e "IP list \n$(ip a | grep inet | awk '{printf "%-10s %-10s\n", $1, $2}')"
+
+
 
