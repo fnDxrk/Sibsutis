@@ -3,7 +3,7 @@
 ; 3) ((1 ((*) 2 3)))
 
 (print "Task 1")
-; car -> cdr -> car -> car
+; car -> cdr -> car -> car -> car
 
 (defun task_1 (lst)
   (car (car (car (cdr (car lst))))))
