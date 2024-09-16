@@ -6,10 +6,9 @@
 ; car -> cdr -> car -> car -> car
 
 (defun task_1 (lst)
-  (car (car (car (cdr (car lst))))))
+  (car (cdr (car lst))))
 
 (print (task_1 '((1 ((*) 2 3)))))
-
 
 
 ; 2. Объясните работу функций:
@@ -53,13 +52,11 @@
 (print "Task 4")
 
 (defun task_4 (lst)
-  (if (null (cdr lst))
-      lst
       (append 
         (last (butlast lst))
         (cdr (butlast (butlast lst)))
         (list (car lst))
-        (list (car (last lst))))))
+        (list (car (last lst)))))
 
 (defparameter list1 '(1))
 (defparameter list2 '(1 2 3 4 5))
