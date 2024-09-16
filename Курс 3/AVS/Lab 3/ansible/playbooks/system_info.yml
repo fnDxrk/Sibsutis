@@ -1,0 +1,12 @@
+---
+- name: Playbook yaml
+  hosts: all
+  tasks:
+    - name: yaml
+      ansible.builtin.setup:
+
+    - name: Create system info JSON
+      ansible.builtin.template:
+        src: system_info.j2
+        dest: /tmp/system_info.json
+

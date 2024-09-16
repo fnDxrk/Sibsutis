@@ -1,0 +1,9 @@
+{
+  "hostname": "{{ ansible_hostname }}",
+  "distribution": "{{ ansible_distribution }}",
+  "distribution_version": "{{ ansible_distribution_version }}",
+  "kernel": "{{ ansible_kernel }}",
+  "architecture": "{{ ansible_architecture }}",
+  "cpu_cores": "{{ ansible_processor_cores }}",
+  "memory_mb": "{{ ansible_memory_mb.real.total }}",
+}

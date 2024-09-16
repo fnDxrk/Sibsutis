@@ -1,0 +1,1464 @@
+cont_2 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_apparmor": {
+            "status": "disabled"
+        },
+        "ansible_architecture": "x86_64",
+        "ansible_bios_date": "01/10/2024",
+        "ansible_bios_vendor": "LENOVO",
+        "ansible_bios_version": "PJCN07WW",
+        "ansible_board_asset_tag": "NO Asset Tag",
+        "ansible_board_name": "LNVNB161216",
+        "ansible_board_serial": "BH006Y4F",
+        "ansible_board_vendor": "LENOVO",
+        "ansible_board_version": "SDK0T76479 WIN",
+        "ansible_chassis_asset_tag": "NO Asset Tag",
+        "ansible_chassis_serial": "BH006Y4F",
+        "ansible_chassis_vendor": "LENOVO",
+        "ansible_chassis_version": "Legion R7000 APH9",
+        "ansible_cmdline": {
+            "initrd": "\\initramfs-linux.img",
+            "loglevel": "3",
+            "nvidia-drm.modeset": "1",
+            "quiet": true,
+            "root": "\"LABEL=Arch\"",
+            "rw": true,
+            "splash": true,
+            "udev.log_level": "3",
+            "zswap.enabled": "0"
+        },
+        "ansible_date_time": {
+            "date": "2024-09-16",
+            "day": "16",
+            "epoch": "1726479141",
+            "epoch_int": "1726479141",
+            "hour": "09",
+            "iso8601": "2024-09-16T09:32:21Z",
+            "iso8601_basic": "20240916T093221210351",
+            "iso8601_basic_short": "20240916T093221",
+            "iso8601_micro": "2024-09-16T09:32:21.210351Z",
+            "minute": "32",
+            "month": "09",
+            "second": "21",
+            "time": "09:32:21",
+            "tz": "UTC",
+            "tz_dst": "UTC",
+            "tz_offset": "+0000",
+            "weekday": "Monday",
+            "weekday_number": "1",
+            "weeknumber": "38",
+            "year": "2024"
+        },
+        "ansible_device_links": {
+            "ids": {},
+            "labels": {},
+            "masters": {},
+            "uuids": {}
+        },
+        "ansible_devices": {
+            "nvme0n1": {
+                "holders": [],
+                "host": "",
+                "links": {
+                    "ids": [],
+                    "labels": [],
+                    "masters": [],
+                    "uuids": []
+                },
+                "model": "UMIS RPJYJ512MKN1QWY",
+                "partitions": {
+                    "nvme0n1p1": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "1228800",
+                        "sectorsize": 512,
+                        "size": "600.00 MB",
+                        "start": "2048",
+                        "uuid": null
+                    },
+                    "nvme0n1p2": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "125829120",
+                        "sectorsize": 512,
+                        "size": "60.00 GB",
+                        "start": "1230848",
+                        "uuid": null
+                    },
+                    "nvme0n1p3": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "859832320",
+                        "sectorsize": 512,
+                        "size": "410.00 GB",
+                        "start": "127059968",
+                        "uuid": null
+                    }
+                },
+                "removable": "0",
+                "rotational": "0",
+                "sas_address": null,
+                "sas_device_handle": null,
+                "scheduler_mode": "none",
+                "sectors": "1000215216",
+                "sectorsize": "512",
+                "serial": "SS1K16471Z3CD41848DY",
+                "size": "476.94 GB",
+                "support_discard": "512",
+                "vendor": null,
+                "virtual": 1
+            },
+            "nvme1n1": {
+                "holders": [],
+                "host": "",
+                "links": {
+                    "ids": [],
+                    "labels": [],
+                    "masters": [],
+                    "uuids": []
+                },
+                "model": "DGSM4512GG23T",
+                "partitions": {
+                    "nvme1n1p1": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "32768",
+                        "sectorsize": 512,
+                        "size": "16.00 MB",
+                        "start": "2048",
+                        "uuid": null
+                    },
+                    "nvme1n1p2": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "251664384",
+                        "sectorsize": 512,
+                        "size": "120.00 GB",
+                        "start": "34816",
+                        "uuid": null
+                    },
+                    "nvme1n1p3": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "748515328",
+                        "sectorsize": 512,
+                        "size": "356.92 GB",
+                        "start": "251699200",
+                        "uuid": null
+                    }
+                },
+                "removable": "0",
+                "rotational": "0",
+                "sas_address": null,
+                "sas_device_handle": null,
+                "scheduler_mode": "none",
+                "sectors": "1000215216",
+                "sectorsize": "512",
+                "serial": "D1N410N1X00470",
+                "size": "476.94 GB",
+                "support_discard": "512",
+                "vendor": null,
+                "virtual": 1
+            },
+            "zram0": {
+                "holders": [],
+                "host": "",
+                "links": {
+                    "ids": [],
+                    "labels": [],
+                    "masters": [],
+                    "uuids": []
+                },
+                "model": null,
+                "partitions": {},
+                "removable": "0",
+                "rotational": "0",
+                "sas_address": null,
+                "sas_device_handle": null,
+                "scheduler_mode": "",
+                "sectors": "15535104",
+                "sectorsize": "4096",
+                "size": "7.41 GB",
+                "support_discard": "4096",
+                "vendor": null,
+                "virtual": 1
+            }
+        },
+        "ansible_distribution": "Ubuntu",
+        "ansible_distribution_file_parsed": true,
+        "ansible_distribution_file_path": "/etc/os-release",
+        "ansible_distribution_file_variety": "Debian",
+        "ansible_distribution_major_version": "24",
+        "ansible_distribution_release": "noble",
+        "ansible_distribution_version": "24.04",
+        "ansible_dns": {
+            "nameservers": [
+                "192.168.184.120"
+            ]
+        },
+        "ansible_domain": "",
+        "ansible_effective_group_id": 0,
+        "ansible_effective_user_id": 0,
+        "ansible_env": {
+            "HOME": "/root",
+            "LANG": "C.UTF-8",
+            "LOGNAME": "root",
+            "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
+            "PWD": "/root",
+            "SHELL": "/bin/bash",
+            "SHLVL": "0",
+            "SSH_CLIENT": "172.17.0.1 36984 22",
+            "SSH_CONNECTION": "172.17.0.1 36984 172.17.0.3 22",
+            "SSH_TTY": "/dev/pts/1",
+            "TERM": "xterm-kitty",
+            "USER": "root",
+            "_": "/bin/sh"
+        },
+        "ansible_fibre_channel_wwn": [],
+        "ansible_fips": false,
+        "ansible_form_factor": "Notebook",
+        "ansible_fqdn": "03976cbb58bf",
+        "ansible_hostname": "03976cbb58bf",
+        "ansible_hostnqn": "",
+        "ansible_is_chroot": false,
+        "ansible_iscsi_iqn": "",
+        "ansible_kernel": "6.10.10-arch1-1",
+        "ansible_kernel_version": "#1 SMP PREEMPT_DYNAMIC Thu, 12 Sep 2024 17:21:02 +0000",
+        "ansible_loadavg": {
+            "15m": 1.03564453125,
+            "1m": 1.18017578125,
+            "5m": 1.1474609375
+        },
+        "ansible_local": {},
+        "ansible_lsb": {
+            "codename": "noble",
+            "description": "Ubuntu 24.04 LTS",
+            "id": "Ubuntu",
+            "major_release": "24",
+            "release": "24.04"
+        },
+        "ansible_lvm": "N/A",
+        "ansible_machine": "x86_64",
+        "ansible_machine_id": "e17e3e99353f402185fcdc4f0c028608",
+        "ansible_memfree_mb": 7052,
+        "ansible_memory_mb": {
+            "nocache": {
+                "free": 10909,
+                "used": 4262
+            },
+            "real": {
+                "free": 7052,
+                "total": 15171,
+                "used": 8119
+            },
+            "swap": {
+                "cached": 0,
+                "free": 7585,
+                "total": 7585,
+                "used": 0
+            }
+        },
+        "ansible_memtotal_mb": 15171,
+        "ansible_mounts": [
+            {
+                "block_available": 10812277,
+                "block_size": 4096,
+                "block_total": 15728640,
+                "block_used": 4916363,
+                "device": "/dev/nvme0n1p2",
+                "dump": 0,
+                "fstype": "btrfs",
+                "inode_available": 0,
+                "inode_total": 0,
+                "inode_used": 0,
+                "mount": "/etc/resolv.conf",
+                "options": "rw,noatime,compress-force=zstd:3,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/,bind",
+                "passno": 0,
+                "size_available": 44287086592,
+                "size_total": 64424509440,
+                "uuid": "N/A"
+            },
+            {
+                "block_available": 10812277,
+                "block_size": 4096,
+                "block_total": 15728640,
+                "block_used": 4916363,
+                "device": "/dev/nvme0n1p2",
+                "dump": 0,
+                "fstype": "btrfs",
+                "inode_available": 0,
+                "inode_total": 0,
+                "inode_used": 0,
+                "mount": "/etc/hostname",
+                "options": "rw,noatime,compress-force=zstd:3,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/,bind",
+                "passno": 0,
+                "size_available": 44287086592,
+                "size_total": 64424509440,
+                "uuid": "N/A"
+            },
+            {
+                "block_available": 10812277,
+                "block_size": 4096,
+                "block_total": 15728640,
+                "block_used": 4916363,
+                "device": "/dev/nvme0n1p2",
+                "dump": 0,
+                "fstype": "btrfs",
+                "inode_available": 0,
+                "inode_total": 0,
+                "inode_used": 0,
+                "mount": "/etc/hosts",
+                "options": "rw,noatime,compress-force=zstd:3,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/,bind",
+                "passno": 0,
+                "size_available": 44287086592,
+                "size_total": 64424509440,
+                "uuid": "N/A"
+            }
+        ],
+        "ansible_nodename": "03976cbb58bf",
+        "ansible_os_family": "Debian",
+        "ansible_pkg_mgr": "apt",
+        "ansible_proc_cmdline": {
+            "initrd": [
+                "\\amd-ucode.img",
+                "\\initramfs-linux.img"
+            ],
+            "loglevel": "3",
+            "nvidia-drm.modeset": "1",
+            "quiet": true,
+            "root": "\"LABEL=Arch\"",
+            "rw": true,
+            "splash": true,
+            "udev.log_level": "3",
+            "zswap.enabled": "0"
+        },
+        "ansible_processor": [
+            "0",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "1",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "2",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "3",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "4",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "5",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "6",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "7",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "8",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "9",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "10",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "11",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "12",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "13",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "14",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "15",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics"
+        ],
+        "ansible_processor_cores": 8,
+        "ansible_processor_count": 1,
+        "ansible_processor_nproc": 16,
+        "ansible_processor_threads_per_core": 2,
+        "ansible_processor_vcpus": 16,
+        "ansible_product_name": "83EG",
+        "ansible_product_serial": "BH006Y4F",
+        "ansible_product_uuid": "32667573-50c8-4451-adb2-fc5ceef38972",
+        "ansible_product_version": "Legion R7000 APH9",
+        "ansible_python": {
+            "executable": "/usr/bin/python3.12",
+            "has_sslcontext": true,
+            "type": "cpython",
+            "version": {
+                "major": 3,
+                "micro": 3,
+                "minor": 12,
+                "releaselevel": "final",
+                "serial": 0
+            },
+            "version_info": [
+                3,
+                12,
+                3,
+                "final",
+                0
+            ]
+        },
+        "ansible_python_version": "3.12.3",
+        "ansible_real_group_id": 0,
+        "ansible_real_user_id": 0,
+        "ansible_selinux": {
+            "status": "disabled"
+        },
+        "ansible_selinux_python_present": true,
+        "ansible_service_mgr": "sshd",
+        "ansible_ssh_host_key_ecdsa_public": "AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBH4GJ3CI8mvBzUTuKG4dDd+d89hD6WyvnUGBXMO/ow3coxv5GhCJ3tvOof/jLKixs9/az+AoYZAj/ry5m2oi9fE=",
+        "ansible_ssh_host_key_ecdsa_public_keytype": "ecdsa-sha2-nistp256",
+        "ansible_ssh_host_key_ed25519_public": "AAAAC3NzaC1lZDI1NTE5AAAAIEPFJSHBJdjaZycjh3pzRBOHTz/E0v/4j10UTS4qfnAT",
+        "ansible_ssh_host_key_ed25519_public_keytype": "ssh-ed25519",
+        "ansible_ssh_host_key_rsa_public": "AAAAB3NzaC1yc2EAAAADAQABAAABgQDk6aJXA50bYjX7X/kJTlX51Yk2jY3AeQaY43iXgVu+Y1ERZdml7r/5JIG23xvT454LzJv5IYwM8ZGExeoaFmLidpuueaoB994gBzcexI+rEa5BKnjuyeE261Stynqmkg033MTwOVBlR1GjwOE9D/dCM4SnrQ0rZxjPJqNcX1fg5Yk2Mtt3RIWaK6BkdWoQKY9PrzE1Mw504QjaIPJ584pa6v3fxMBnhLjuc4rtzJTfd2rMcVL02kdEemeIP/TUSdsYlMYroWuYnNqOU8DcOHNB/vmHWouyGfV7AHvhYqHICT82HDr8IKYWbUDJYK24onSMg46pImf05ByMHGwa8cU4tVv1MdNp0bUoz9K4Q/JCouUcZRF+d7ESDsN2rXbH3AZgXW3j2GHug4SCpl1rkDy+8JyiwDY9JULo7TuQnBJ6qv5eReuAd4FobX/gmmdSvWXNnCDNKb8zGcC/oIuKJjMKUCFG++WRFLJQEzzuuXI/E4xY286d0bETsY+X1/fcVdc=",
+        "ansible_ssh_host_key_rsa_public_keytype": "ssh-rsa",
+        "ansible_swapfree_mb": 7585,
+        "ansible_swaptotal_mb": 7585,
+        "ansible_system": "Linux",
+        "ansible_system_capabilities": "N/A",
+        "ansible_system_capabilities_enforced": "N/A",
+        "ansible_system_vendor": "LENOVO",
+        "ansible_uptime_seconds": 3766,
+        "ansible_user_dir": "/root",
+        "ansible_user_gecos": "root",
+        "ansible_user_gid": 0,
+        "ansible_user_id": "root",
+        "ansible_user_shell": "/bin/bash",
+        "ansible_user_uid": 0,
+        "ansible_userspace_architecture": "x86_64",
+        "ansible_userspace_bits": "64",
+        "ansible_virtualization_role": "guest",
+        "ansible_virtualization_tech_guest": [
+            "container",
+            "docker"
+        ],
+        "ansible_virtualization_tech_host": [
+            "kvm"
+        ],
+        "ansible_virtualization_type": "docker",
+        "discovered_interpreter_python": "/usr/bin/python3.12",
+        "gather_subset": [
+            "all"
+        ],
+        "module_setup": true
+    },
+    "changed": false
+}
+cont_2 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_apparmor": {
+            "status": "disabled"
+        },
+        "ansible_architecture": "x86_64",
+        "ansible_bios_date": "01/10/2024",
+        "ansible_bios_vendor": "LENOVO",
+        "ansible_bios_version": "PJCN07WW",
+        "ansible_board_asset_tag": "NO Asset Tag",
+        "ansible_board_name": "LNVNB161216",
+        "ansible_board_serial": "BH006Y4F",
+        "ansible_board_vendor": "LENOVO",
+        "ansible_board_version": "SDK0T76479 WIN",
+        "ansible_chassis_asset_tag": "NO Asset Tag",
+        "ansible_chassis_serial": "BH006Y4F",
+        "ansible_chassis_vendor": "LENOVO",
+        "ansible_chassis_version": "Legion R7000 APH9",
+        "ansible_cmdline": {
+            "initrd": "\\initramfs-linux.img",
+            "loglevel": "3",
+            "nvidia-drm.modeset": "1",
+            "quiet": true,
+            "root": "\"LABEL=Arch\"",
+            "rw": true,
+            "splash": true,
+            "udev.log_level": "3",
+            "zswap.enabled": "0"
+        },
+        "ansible_date_time": {
+            "date": "2024-09-16",
+            "day": "16",
+            "epoch": "1726479176",
+            "epoch_int": "1726479176",
+            "hour": "09",
+            "iso8601": "2024-09-16T09:32:56Z",
+            "iso8601_basic": "20240916T093256284778",
+            "iso8601_basic_short": "20240916T093256",
+            "iso8601_micro": "2024-09-16T09:32:56.284778Z",
+            "minute": "32",
+            "month": "09",
+            "second": "56",
+            "time": "09:32:56",
+            "tz": "UTC",
+            "tz_dst": "UTC",
+            "tz_offset": "+0000",
+            "weekday": "Monday",
+            "weekday_number": "1",
+            "weeknumber": "38",
+            "year": "2024"
+        },
+        "ansible_device_links": {
+            "ids": {},
+            "labels": {},
+            "masters": {},
+            "uuids": {}
+        },
+        "ansible_devices": {
+            "nvme0n1": {
+                "holders": [],
+                "host": "",
+                "links": {
+                    "ids": [],
+                    "labels": [],
+                    "masters": [],
+                    "uuids": []
+                },
+                "model": "UMIS RPJYJ512MKN1QWY",
+                "partitions": {
+                    "nvme0n1p1": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "1228800",
+                        "sectorsize": 512,
+                        "size": "600.00 MB",
+                        "start": "2048",
+                        "uuid": null
+                    },
+                    "nvme0n1p2": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "125829120",
+                        "sectorsize": 512,
+                        "size": "60.00 GB",
+                        "start": "1230848",
+                        "uuid": null
+                    },
+                    "nvme0n1p3": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "859832320",
+                        "sectorsize": 512,
+                        "size": "410.00 GB",
+                        "start": "127059968",
+                        "uuid": null
+                    }
+                },
+                "removable": "0",
+                "rotational": "0",
+                "sas_address": null,
+                "sas_device_handle": null,
+                "scheduler_mode": "none",
+                "sectors": "1000215216",
+                "sectorsize": "512",
+                "serial": "SS1K16471Z3CD41848DY",
+                "size": "476.94 GB",
+                "support_discard": "512",
+                "vendor": null,
+                "virtual": 1
+            },
+            "nvme1n1": {
+                "holders": [],
+                "host": "",
+                "links": {
+                    "ids": [],
+                    "labels": [],
+                    "masters": [],
+                    "uuids": []
+                },
+                "model": "DGSM4512GG23T",
+                "partitions": {
+                    "nvme1n1p1": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "32768",
+                        "sectorsize": 512,
+                        "size": "16.00 MB",
+                        "start": "2048",
+                        "uuid": null
+                    },
+                    "nvme1n1p2": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "251664384",
+                        "sectorsize": 512,
+                        "size": "120.00 GB",
+                        "start": "34816",
+                        "uuid": null
+                    },
+                    "nvme1n1p3": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "748515328",
+                        "sectorsize": 512,
+                        "size": "356.92 GB",
+                        "start": "251699200",
+                        "uuid": null
+                    }
+                },
+                "removable": "0",
+                "rotational": "0",
+                "sas_address": null,
+                "sas_device_handle": null,
+                "scheduler_mode": "none",
+                "sectors": "1000215216",
+                "sectorsize": "512",
+                "serial": "D1N410N1X00470",
+                "size": "476.94 GB",
+                "support_discard": "512",
+                "vendor": null,
+                "virtual": 1
+            },
+            "zram0": {
+                "holders": [],
+                "host": "",
+                "links": {
+                    "ids": [],
+                    "labels": [],
+                    "masters": [],
+                    "uuids": []
+                },
+                "model": null,
+                "partitions": {},
+                "removable": "0",
+                "rotational": "0",
+                "sas_address": null,
+                "sas_device_handle": null,
+                "scheduler_mode": "",
+                "sectors": "15535104",
+                "sectorsize": "4096",
+                "size": "7.41 GB",
+                "support_discard": "4096",
+                "vendor": null,
+                "virtual": 1
+            }
+        },
+        "ansible_distribution": "Ubuntu",
+        "ansible_distribution_file_parsed": true,
+        "ansible_distribution_file_path": "/etc/os-release",
+        "ansible_distribution_file_variety": "Debian",
+        "ansible_distribution_major_version": "24",
+        "ansible_distribution_release": "noble",
+        "ansible_distribution_version": "24.04",
+        "ansible_dns": {
+            "nameservers": [
+                "192.168.184.120"
+            ]
+        },
+        "ansible_domain": "",
+        "ansible_effective_group_id": 0,
+        "ansible_effective_user_id": 0,
+        "ansible_env": {
+            "HOME": "/root",
+            "LANG": "C.UTF-8",
+            "LOGNAME": "root",
+            "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
+            "PWD": "/root",
+            "SHELL": "/bin/bash",
+            "SHLVL": "0",
+            "SSH_CLIENT": "172.17.0.1 36984 22",
+            "SSH_CONNECTION": "172.17.0.1 36984 172.17.0.3 22",
+            "SSH_TTY": "/dev/pts/1",
+            "TERM": "xterm-kitty",
+            "USER": "root",
+            "_": "/bin/sh"
+        },
+        "ansible_fibre_channel_wwn": [],
+        "ansible_fips": false,
+        "ansible_form_factor": "Notebook",
+        "ansible_fqdn": "03976cbb58bf",
+        "ansible_hostname": "03976cbb58bf",
+        "ansible_hostnqn": "",
+        "ansible_is_chroot": false,
+        "ansible_iscsi_iqn": "",
+        "ansible_kernel": "6.10.10-arch1-1",
+        "ansible_kernel_version": "#1 SMP PREEMPT_DYNAMIC Thu, 12 Sep 2024 17:21:02 +0000",
+        "ansible_loadavg": {
+            "15m": 1.0107421875,
+            "1m": 0.82958984375,
+            "5m": 1.06494140625
+        },
+        "ansible_local": {},
+        "ansible_lsb": {
+            "codename": "noble",
+            "description": "Ubuntu 24.04 LTS",
+            "id": "Ubuntu",
+            "major_release": "24",
+            "release": "24.04"
+        },
+        "ansible_lvm": "N/A",
+        "ansible_machine": "x86_64",
+        "ansible_machine_id": "e17e3e99353f402185fcdc4f0c028608",
+        "ansible_memfree_mb": 7058,
+        "ansible_memory_mb": {
+            "nocache": {
+                "free": 10916,
+                "used": 4255
+            },
+            "real": {
+                "free": 7058,
+                "total": 15171,
+                "used": 8113
+            },
+            "swap": {
+                "cached": 0,
+                "free": 7585,
+                "total": 7585,
+                "used": 0
+            }
+        },
+        "ansible_memtotal_mb": 15171,
+        "ansible_mounts": [
+            {
+                "block_available": 10812277,
+                "block_size": 4096,
+                "block_total": 15728640,
+                "block_used": 4916363,
+                "device": "/dev/nvme0n1p2",
+                "dump": 0,
+                "fstype": "btrfs",
+                "inode_available": 0,
+                "inode_total": 0,
+                "inode_used": 0,
+                "mount": "/etc/resolv.conf",
+                "options": "rw,noatime,compress-force=zstd:3,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/,bind",
+                "passno": 0,
+                "size_available": 44287086592,
+                "size_total": 64424509440,
+                "uuid": "N/A"
+            },
+            {
+                "block_available": 10812277,
+                "block_size": 4096,
+                "block_total": 15728640,
+                "block_used": 4916363,
+                "device": "/dev/nvme0n1p2",
+                "dump": 0,
+                "fstype": "btrfs",
+                "inode_available": 0,
+                "inode_total": 0,
+                "inode_used": 0,
+                "mount": "/etc/hostname",
+                "options": "rw,noatime,compress-force=zstd:3,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/,bind",
+                "passno": 0,
+                "size_available": 44287086592,
+                "size_total": 64424509440,
+                "uuid": "N/A"
+            },
+            {
+                "block_available": 10812277,
+                "block_size": 4096,
+                "block_total": 15728640,
+                "block_used": 4916363,
+                "device": "/dev/nvme0n1p2",
+                "dump": 0,
+                "fstype": "btrfs",
+                "inode_available": 0,
+                "inode_total": 0,
+                "inode_used": 0,
+                "mount": "/etc/hosts",
+                "options": "rw,noatime,compress-force=zstd:3,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/,bind",
+                "passno": 0,
+                "size_available": 44287086592,
+                "size_total": 64424509440,
+                "uuid": "N/A"
+            }
+        ],
+        "ansible_nodename": "03976cbb58bf",
+        "ansible_os_family": "Debian",
+        "ansible_pkg_mgr": "apt",
+        "ansible_proc_cmdline": {
+            "initrd": [
+                "\\amd-ucode.img",
+                "\\initramfs-linux.img"
+            ],
+            "loglevel": "3",
+            "nvidia-drm.modeset": "1",
+            "quiet": true,
+            "root": "\"LABEL=Arch\"",
+            "rw": true,
+            "splash": true,
+            "udev.log_level": "3",
+            "zswap.enabled": "0"
+        },
+        "ansible_processor": [
+            "0",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "1",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "2",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "3",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "4",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "5",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "6",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "7",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "8",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "9",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "10",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "11",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "12",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "13",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "14",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "15",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics"
+        ],
+        "ansible_processor_cores": 8,
+        "ansible_processor_count": 1,
+        "ansible_processor_nproc": 16,
+        "ansible_processor_threads_per_core": 2,
+        "ansible_processor_vcpus": 16,
+        "ansible_product_name": "83EG",
+        "ansible_product_serial": "BH006Y4F",
+        "ansible_product_uuid": "32667573-50c8-4451-adb2-fc5ceef38972",
+        "ansible_product_version": "Legion R7000 APH9",
+        "ansible_python": {
+            "executable": "/usr/bin/python3.12",
+            "has_sslcontext": true,
+            "type": "cpython",
+            "version": {
+                "major": 3,
+                "micro": 3,
+                "minor": 12,
+                "releaselevel": "final",
+                "serial": 0
+            },
+            "version_info": [
+                3,
+                12,
+                3,
+                "final",
+                0
+            ]
+        },
+        "ansible_python_version": "3.12.3",
+        "ansible_real_group_id": 0,
+        "ansible_real_user_id": 0,
+        "ansible_selinux": {
+            "status": "disabled"
+        },
+        "ansible_selinux_python_present": true,
+        "ansible_service_mgr": "sshd",
+        "ansible_ssh_host_key_ecdsa_public": "AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBH4GJ3CI8mvBzUTuKG4dDd+d89hD6WyvnUGBXMO/ow3coxv5GhCJ3tvOof/jLKixs9/az+AoYZAj/ry5m2oi9fE=",
+        "ansible_ssh_host_key_ecdsa_public_keytype": "ecdsa-sha2-nistp256",
+        "ansible_ssh_host_key_ed25519_public": "AAAAC3NzaC1lZDI1NTE5AAAAIEPFJSHBJdjaZycjh3pzRBOHTz/E0v/4j10UTS4qfnAT",
+        "ansible_ssh_host_key_ed25519_public_keytype": "ssh-ed25519",
+        "ansible_ssh_host_key_rsa_public": "AAAAB3NzaC1yc2EAAAADAQABAAABgQDk6aJXA50bYjX7X/kJTlX51Yk2jY3AeQaY43iXgVu+Y1ERZdml7r/5JIG23xvT454LzJv5IYwM8ZGExeoaFmLidpuueaoB994gBzcexI+rEa5BKnjuyeE261Stynqmkg033MTwOVBlR1GjwOE9D/dCM4SnrQ0rZxjPJqNcX1fg5Yk2Mtt3RIWaK6BkdWoQKY9PrzE1Mw504QjaIPJ584pa6v3fxMBnhLjuc4rtzJTfd2rMcVL02kdEemeIP/TUSdsYlMYroWuYnNqOU8DcOHNB/vmHWouyGfV7AHvhYqHICT82HDr8IKYWbUDJYK24onSMg46pImf05ByMHGwa8cU4tVv1MdNp0bUoz9K4Q/JCouUcZRF+d7ESDsN2rXbH3AZgXW3j2GHug4SCpl1rkDy+8JyiwDY9JULo7TuQnBJ6qv5eReuAd4FobX/gmmdSvWXNnCDNKb8zGcC/oIuKJjMKUCFG++WRFLJQEzzuuXI/E4xY286d0bETsY+X1/fcVdc=",
+        "ansible_ssh_host_key_rsa_public_keytype": "ssh-rsa",
+        "ansible_swapfree_mb": 7585,
+        "ansible_swaptotal_mb": 7585,
+        "ansible_system": "Linux",
+        "ansible_system_capabilities": "N/A",
+        "ansible_system_capabilities_enforced": "N/A",
+        "ansible_system_vendor": "LENOVO",
+        "ansible_uptime_seconds": 3801,
+        "ansible_user_dir": "/root",
+        "ansible_user_gecos": "root",
+        "ansible_user_gid": 0,
+        "ansible_user_id": "root",
+        "ansible_user_shell": "/bin/bash",
+        "ansible_user_uid": 0,
+        "ansible_userspace_architecture": "x86_64",
+        "ansible_userspace_bits": "64",
+        "ansible_virtualization_role": "guest",
+        "ansible_virtualization_tech_guest": [
+            "container",
+            "docker"
+        ],
+        "ansible_virtualization_tech_host": [
+            "kvm"
+        ],
+        "ansible_virtualization_type": "docker",
+        "discovered_interpreter_python": "/usr/bin/python3.12",
+        "gather_subset": [
+            "all"
+        ],
+        "module_setup": true
+    },
+    "changed": false
+}
+cont_2 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_apparmor": {
+            "status": "disabled"
+        },
+        "ansible_architecture": "x86_64",
+        "ansible_bios_date": "01/10/2024",
+        "ansible_bios_vendor": "LENOVO",
+        "ansible_bios_version": "PJCN07WW",
+        "ansible_board_asset_tag": "NO Asset Tag",
+        "ansible_board_name": "LNVNB161216",
+        "ansible_board_serial": "BH006Y4F",
+        "ansible_board_vendor": "LENOVO",
+        "ansible_board_version": "SDK0T76479 WIN",
+        "ansible_chassis_asset_tag": "NO Asset Tag",
+        "ansible_chassis_serial": "BH006Y4F",
+        "ansible_chassis_vendor": "LENOVO",
+        "ansible_chassis_version": "Legion R7000 APH9",
+        "ansible_cmdline": {
+            "initrd": "\\initramfs-linux.img",
+            "loglevel": "3",
+            "nvidia-drm.modeset": "1",
+            "quiet": true,
+            "root": "\"LABEL=Arch\"",
+            "rw": true,
+            "splash": true,
+            "udev.log_level": "3",
+            "zswap.enabled": "0"
+        },
+        "ansible_date_time": {
+            "date": "2024-09-16",
+            "day": "16",
+            "epoch": "1726479298",
+            "epoch_int": "1726479298",
+            "hour": "09",
+            "iso8601": "2024-09-16T09:34:58Z",
+            "iso8601_basic": "20240916T093458276520",
+            "iso8601_basic_short": "20240916T093458",
+            "iso8601_micro": "2024-09-16T09:34:58.276520Z",
+            "minute": "34",
+            "month": "09",
+            "second": "58",
+            "time": "09:34:58",
+            "tz": "UTC",
+            "tz_dst": "UTC",
+            "tz_offset": "+0000",
+            "weekday": "Monday",
+            "weekday_number": "1",
+            "weeknumber": "38",
+            "year": "2024"
+        },
+        "ansible_device_links": {
+            "ids": {},
+            "labels": {},
+            "masters": {},
+            "uuids": {}
+        },
+        "ansible_devices": {
+            "nvme0n1": {
+                "holders": [],
+                "host": "",
+                "links": {
+                    "ids": [],
+                    "labels": [],
+                    "masters": [],
+                    "uuids": []
+                },
+                "model": "UMIS RPJYJ512MKN1QWY",
+                "partitions": {
+                    "nvme0n1p1": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "1228800",
+                        "sectorsize": 512,
+                        "size": "600.00 MB",
+                        "start": "2048",
+                        "uuid": null
+                    },
+                    "nvme0n1p2": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "125829120",
+                        "sectorsize": 512,
+                        "size": "60.00 GB",
+                        "start": "1230848",
+                        "uuid": null
+                    },
+                    "nvme0n1p3": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "859832320",
+                        "sectorsize": 512,
+                        "size": "410.00 GB",
+                        "start": "127059968",
+                        "uuid": null
+                    }
+                },
+                "removable": "0",
+                "rotational": "0",
+                "sas_address": null,
+                "sas_device_handle": null,
+                "scheduler_mode": "none",
+                "sectors": "1000215216",
+                "sectorsize": "512",
+                "serial": "SS1K16471Z3CD41848DY",
+                "size": "476.94 GB",
+                "support_discard": "512",
+                "vendor": null,
+                "virtual": 1
+            },
+            "nvme1n1": {
+                "holders": [],
+                "host": "",
+                "links": {
+                    "ids": [],
+                    "labels": [],
+                    "masters": [],
+                    "uuids": []
+                },
+                "model": "DGSM4512GG23T",
+                "partitions": {
+                    "nvme1n1p1": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "32768",
+                        "sectorsize": 512,
+                        "size": "16.00 MB",
+                        "start": "2048",
+                        "uuid": null
+                    },
+                    "nvme1n1p2": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "251664384",
+                        "sectorsize": 512,
+                        "size": "120.00 GB",
+                        "start": "34816",
+                        "uuid": null
+                    },
+                    "nvme1n1p3": {
+                        "holders": [],
+                        "links": {
+                            "ids": [],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "748515328",
+                        "sectorsize": 512,
+                        "size": "356.92 GB",
+                        "start": "251699200",
+                        "uuid": null
+                    }
+                },
+                "removable": "0",
+                "rotational": "0",
+                "sas_address": null,
+                "sas_device_handle": null,
+                "scheduler_mode": "none",
+                "sectors": "1000215216",
+                "sectorsize": "512",
+                "serial": "D1N410N1X00470",
+                "size": "476.94 GB",
+                "support_discard": "512",
+                "vendor": null,
+                "virtual": 1
+            },
+            "zram0": {
+                "holders": [],
+                "host": "",
+                "links": {
+                    "ids": [],
+                    "labels": [],
+                    "masters": [],
+                    "uuids": []
+                },
+                "model": null,
+                "partitions": {},
+                "removable": "0",
+                "rotational": "0",
+                "sas_address": null,
+                "sas_device_handle": null,
+                "scheduler_mode": "",
+                "sectors": "15535104",
+                "sectorsize": "4096",
+                "size": "7.41 GB",
+                "support_discard": "4096",
+                "vendor": null,
+                "virtual": 1
+            }
+        },
+        "ansible_distribution": "Ubuntu",
+        "ansible_distribution_file_parsed": true,
+        "ansible_distribution_file_path": "/etc/os-release",
+        "ansible_distribution_file_variety": "Debian",
+        "ansible_distribution_major_version": "24",
+        "ansible_distribution_release": "noble",
+        "ansible_distribution_version": "24.04",
+        "ansible_dns": {
+            "nameservers": [
+                "192.168.184.120"
+            ]
+        },
+        "ansible_domain": "",
+        "ansible_effective_group_id": 0,
+        "ansible_effective_user_id": 0,
+        "ansible_env": {
+            "HOME": "/root",
+            "LANG": "C.UTF-8",
+            "LOGNAME": "root",
+            "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
+            "PWD": "/root",
+            "SHELL": "/bin/bash",
+            "SHLVL": "0",
+            "SSH_CLIENT": "172.17.0.1 50672 22",
+            "SSH_CONNECTION": "172.17.0.1 50672 172.17.0.3 22",
+            "SSH_TTY": "/dev/pts/1",
+            "TERM": "xterm-kitty",
+            "USER": "root",
+            "_": "/bin/sh"
+        },
+        "ansible_fibre_channel_wwn": [],
+        "ansible_fips": false,
+        "ansible_form_factor": "Notebook",
+        "ansible_fqdn": "03976cbb58bf",
+        "ansible_hostname": "03976cbb58bf",
+        "ansible_hostnqn": "",
+        "ansible_is_chroot": false,
+        "ansible_iscsi_iqn": "",
+        "ansible_kernel": "6.10.10-arch1-1",
+        "ansible_kernel_version": "#1 SMP PREEMPT_DYNAMIC Thu, 12 Sep 2024 17:21:02 +0000",
+        "ansible_loadavg": {
+            "15m": 1.00634765625,
+            "1m": 1.0029296875,
+            "5m": 1.0458984375
+        },
+        "ansible_local": {},
+        "ansible_lsb": {
+            "codename": "noble",
+            "description": "Ubuntu 24.04 LTS",
+            "id": "Ubuntu",
+            "major_release": "24",
+            "release": "24.04"
+        },
+        "ansible_lvm": "N/A",
+        "ansible_machine": "x86_64",
+        "ansible_machine_id": "e17e3e99353f402185fcdc4f0c028608",
+        "ansible_memfree_mb": 6664,
+        "ansible_memory_mb": {
+            "nocache": {
+                "free": 10697,
+                "used": 4474
+            },
+            "real": {
+                "free": 6664,
+                "total": 15171,
+                "used": 8507
+            },
+            "swap": {
+                "cached": 0,
+                "free": 7585,
+                "total": 7585,
+                "used": 0
+            }
+        },
+        "ansible_memtotal_mb": 15171,
+        "ansible_mounts": [
+            {
+                "block_available": 10812277,
+                "block_size": 4096,
+                "block_total": 15728640,
+                "block_used": 4916363,
+                "device": "/dev/nvme0n1p2",
+                "dump": 0,
+                "fstype": "btrfs",
+                "inode_available": 0,
+                "inode_total": 0,
+                "inode_used": 0,
+                "mount": "/etc/resolv.conf",
+                "options": "rw,noatime,compress-force=zstd:3,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/,bind",
+                "passno": 0,
+                "size_available": 44287086592,
+                "size_total": 64424509440,
+                "uuid": "N/A"
+            },
+            {
+                "block_available": 10812277,
+                "block_size": 4096,
+                "block_total": 15728640,
+                "block_used": 4916363,
+                "device": "/dev/nvme0n1p2",
+                "dump": 0,
+                "fstype": "btrfs",
+                "inode_available": 0,
+                "inode_total": 0,
+                "inode_used": 0,
+                "mount": "/etc/hostname",
+                "options": "rw,noatime,compress-force=zstd:3,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/,bind",
+                "passno": 0,
+                "size_available": 44287086592,
+                "size_total": 64424509440,
+                "uuid": "N/A"
+            },
+            {
+                "block_available": 10812277,
+                "block_size": 4096,
+                "block_total": 15728640,
+                "block_used": 4916363,
+                "device": "/dev/nvme0n1p2",
+                "dump": 0,
+                "fstype": "btrfs",
+                "inode_available": 0,
+                "inode_total": 0,
+                "inode_used": 0,
+                "mount": "/etc/hosts",
+                "options": "rw,noatime,compress-force=zstd:3,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/,bind",
+                "passno": 0,
+                "size_available": 44287086592,
+                "size_total": 64424509440,
+                "uuid": "N/A"
+            }
+        ],
+        "ansible_nodename": "03976cbb58bf",
+        "ansible_os_family": "Debian",
+        "ansible_pkg_mgr": "apt",
+        "ansible_proc_cmdline": {
+            "initrd": [
+                "\\amd-ucode.img",
+                "\\initramfs-linux.img"
+            ],
+            "loglevel": "3",
+            "nvidia-drm.modeset": "1",
+            "quiet": true,
+            "root": "\"LABEL=Arch\"",
+            "rw": true,
+            "splash": true,
+            "udev.log_level": "3",
+            "zswap.enabled": "0"
+        },
+        "ansible_processor": [
+            "0",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "1",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "2",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "3",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "4",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "5",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "6",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "7",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "8",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "9",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "10",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "11",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "12",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "13",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "14",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics",
+            "15",
+            "AuthenticAMD",
+            "AMD Ryzen 7 7840H with Radeon 780M Graphics"
+        ],
+        "ansible_processor_cores": 8,
+        "ansible_processor_count": 1,
+        "ansible_processor_nproc": 16,
+        "ansible_processor_threads_per_core": 2,
+        "ansible_processor_vcpus": 16,
+        "ansible_product_name": "83EG",
+        "ansible_product_serial": "BH006Y4F",
+        "ansible_product_uuid": "32667573-50c8-4451-adb2-fc5ceef38972",
+        "ansible_product_version": "Legion R7000 APH9",
+        "ansible_python": {
+            "executable": "/usr/bin/python3.12",
+            "has_sslcontext": true,
+            "type": "cpython",
+            "version": {
+                "major": 3,
+                "micro": 3,
+                "minor": 12,
+                "releaselevel": "final",
+                "serial": 0
+            },
+            "version_info": [
+                3,
+                12,
+                3,
+                "final",
+                0
+            ]
+        },
+        "ansible_python_version": "3.12.3",
+        "ansible_real_group_id": 0,
+        "ansible_real_user_id": 0,
+        "ansible_selinux": {
+            "status": "disabled"
+        },
+        "ansible_selinux_python_present": true,
+        "ansible_service_mgr": "sshd",
+        "ansible_ssh_host_key_ecdsa_public": "AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBH4GJ3CI8mvBzUTuKG4dDd+d89hD6WyvnUGBXMO/ow3coxv5GhCJ3tvOof/jLKixs9/az+AoYZAj/ry5m2oi9fE=",
+        "ansible_ssh_host_key_ecdsa_public_keytype": "ecdsa-sha2-nistp256",
+        "ansible_ssh_host_key_ed25519_public": "AAAAC3NzaC1lZDI1NTE5AAAAIEPFJSHBJdjaZycjh3pzRBOHTz/E0v/4j10UTS4qfnAT",
+        "ansible_ssh_host_key_ed25519_public_keytype": "ssh-ed25519",
+        "ansible_ssh_host_key_rsa_public": "AAAAB3NzaC1yc2EAAAADAQABAAABgQDk6aJXA50bYjX7X/kJTlX51Yk2jY3AeQaY43iXgVu+Y1ERZdml7r/5JIG23xvT454LzJv5IYwM8ZGExeoaFmLidpuueaoB994gBzcexI+rEa5BKnjuyeE261Stynqmkg033MTwOVBlR1GjwOE9D/dCM4SnrQ0rZxjPJqNcX1fg5Yk2Mtt3RIWaK6BkdWoQKY9PrzE1Mw504QjaIPJ584pa6v3fxMBnhLjuc4rtzJTfd2rMcVL02kdEemeIP/TUSdsYlMYroWuYnNqOU8DcOHNB/vmHWouyGfV7AHvhYqHICT82HDr8IKYWbUDJYK24onSMg46pImf05ByMHGwa8cU4tVv1MdNp0bUoz9K4Q/JCouUcZRF+d7ESDsN2rXbH3AZgXW3j2GHug4SCpl1rkDy+8JyiwDY9JULo7TuQnBJ6qv5eReuAd4FobX/gmmdSvWXNnCDNKb8zGcC/oIuKJjMKUCFG++WRFLJQEzzuuXI/E4xY286d0bETsY+X1/fcVdc=",
+        "ansible_ssh_host_key_rsa_public_keytype": "ssh-rsa",
+        "ansible_swapfree_mb": 7585,
+        "ansible_swaptotal_mb": 7585,
+        "ansible_system": "Linux",
+        "ansible_system_capabilities": "N/A",
+        "ansible_system_capabilities_enforced": "N/A",
+        "ansible_system_vendor": "LENOVO",
+        "ansible_uptime_seconds": 3923,
+        "ansible_user_dir": "/root",
+        "ansible_user_gecos": "root",
+        "ansible_user_gid": 0,
+        "ansible_user_id": "root",
+        "ansible_user_shell": "/bin/bash",
+        "ansible_user_uid": 0,
+        "ansible_userspace_architecture": "x86_64",
+        "ansible_userspace_bits": "64",
+        "ansible_virtualization_role": "guest",
+        "ansible_virtualization_tech_guest": [
+            "docker",
+            "container"
+        ],
+        "ansible_virtualization_tech_host": [
+            "kvm"
+        ],
+        "ansible_virtualization_type": "docker",
+        "discovered_interpreter_python": "/usr/bin/python3.12",
+        "gather_subset": [
+            "all"
+        ],
+        "module_setup": true
+    },
+    "changed": false
+}
