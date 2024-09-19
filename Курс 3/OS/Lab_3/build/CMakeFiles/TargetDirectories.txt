@@ -1,3 +1,0 @@
-/home/dxrk_/Documents/Sibsutis/Курс 3/OS/Lab_3/build/CMakeFiles/Lab_3.dir
-/home/dxrk_/Documents/Sibsutis/Курс 3/OS/Lab_3/build/CMakeFiles/edit_cache.dir
-/home/dxrk_/Documents/Sibsutis/Курс 3/OS/Lab_3/build/CMakeFiles/rebuild_cache.dir
