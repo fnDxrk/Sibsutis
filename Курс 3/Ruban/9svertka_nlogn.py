@@ -24,7 +24,6 @@ def ifft(x):
 
 def convolve(x, y):
     N = len(x) + len(y) - 1
-    # Zero-padding to the next power of 2 for efficiency
     N = 1 << (N - 1).bit_length()
     
     X = np.pad(x, (0, N - len(x)), 'constant')
@@ -38,7 +37,6 @@ def convolve(x, y):
     Z = ifft(Z_fft)
     return np.real(Z[:len(x) + len(y) - 1])
 
-# Пример использования
 x = [1, 2, 3]
 y = [4, 5, 6, 7, 8]
 

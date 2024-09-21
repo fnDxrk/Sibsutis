@@ -1,6 +1,5 @@
 import numpy as np
 
-# Прямое дискретное преобразование Фурье (O(n^2))
 def DFT(x):
     n = len(x)
     X = np.zeros(n, dtype=complex)
@@ -9,7 +8,6 @@ def DFT(x):
             X[k] += x[t] * np.exp(-2j * np.pi * k * t / n)
     return X
 
-# Обратное дискретное преобразование Фурье (O(n^2))
 def IDFT(X):
     n = len(X)
     x = np.zeros(n, dtype=complex)
@@ -19,12 +17,9 @@ def IDFT(X):
         x[t] /= n
     return x
 
-# Функция свёртки через ДПФ
 def convolution_dft(signal, kernel):
-    # Длина результата свёртки
     n = len(signal) + len(kernel) - 1
     
-    # Дополняем сигнал и ядро нулями до длины n
     signal = np.pad(signal, (0, n - len(signal)), mode='constant')
     kernel = np.pad(kernel, (0, n - len(kernel)), mode='constant')
     
@@ -32,13 +27,10 @@ def convolution_dft(signal, kernel):
     signal_dft = DFT(signal)
     kernel_dft = DFT(kernel)
     
-    # Перемножаем их спектры
     result_dft = signal_dft * kernel_dft
     
-    # Применяем обратное ДПФ для получения результата свёртки
     result = IDFT(result_dft)
     
-    # Возвращаем только реальную часть результата
     return np.real(result)
 
 # Пример использования
