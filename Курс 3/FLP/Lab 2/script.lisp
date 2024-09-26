@@ -10,8 +10,8 @@
   )
 )
 
-(defparameter list1 '(1 2 3 4 5))
-(print (task_1 list1 1 '+))
+(defparameter list1 '((nil) (nil) nil))
+(print (task_1 list1 'nil '(nil)))
 
 
 
@@ -28,8 +28,8 @@
   )
 )
 
-(defparameter list2 '(1 (a) x (a) 2 a 1 2 d))
-(print (task_2 list2 '(a)))
+(defparameter list2 '(nil))
+(print (task_2 list2 'nil))
 
 
 
@@ -41,12 +41,12 @@
 (print "Task 3")
 
 (defun task_3(lst k n)
-  (cond ((or (null lst)(= n 0)) nil)
+  (cond ((or (null lst)(<= n 0)) nil)
         ((> k 1) (task_3(cdr lst) (- k 1) n))
         (t (cons (car lst)(task_3(cdr lst) 1 (- n 1))))
   )
 )
 
-(defparameter list3 '(-2 6 s -1 4 f 0 z x r))
-(print (task_3 'list3 3 4))
+(defparameter list3 '(1 2))
+(print (task_3 list3 1 -3))
 
