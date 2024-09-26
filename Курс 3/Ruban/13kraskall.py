@@ -32,7 +32,6 @@ def kruskal(n, edges):
     
     return mst
 
-# Пример использования
 edges1 = [
     (0, 1, 1),
     (0, 2, 2),

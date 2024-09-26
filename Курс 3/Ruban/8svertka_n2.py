@@ -33,14 +33,11 @@ def convolution_dft(signal, kernel):
     
     return np.real(result)
 
-# Пример использования
 signal = [1, 2, 3, 4, 5]
 kernel = [1, 0, -1]
 
-# Вызываем функцию свёртки
 result = convolution_dft(signal, kernel)
 
-# Печатаем результат свёртки
 print("Результат свёртки через ДПФ:", result)
 
 # Дополнение нулями:

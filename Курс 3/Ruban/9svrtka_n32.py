@@ -89,7 +89,6 @@ def half_fast_fourier_convolution(f, g):
 
     return conv_result
 
-# Пример использования
 f = np.array([1, 2, 3, 4], dtype=complex)
 g = np.array([2, 0, 1], dtype=complex)
 
