@@ -10,12 +10,15 @@ set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 find_package(PcapPlusPlus REQUIRED)
 
-include_directories(${INCLUDE_DIR})
-
 file(GLOB_RECURSE SOURCES "${SOURCE_DIR}/*.cpp")
-file(GLOB_RECURSE HEADERS "${INCLUDE_DIR}/*.h")
 
-add_executable(OS_Coursework ${SOURCES})
+add_executable("${PROJECT_NAME}" ${SOURCES})
 
-set_target_properties("${PROJECT_NAME}" PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+set_target_properties("${PROJECT_NAME}" 
+    PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    OUTPUT_NAME "OS_Coursework.out"
+)
+
+target_include_directories("${PROJECT_NAME}" PUBLIC ${INCLUDE_DIR})
+
 target_link_libraries("${PROJECT_NAME}" PUBLIC PcapPlusPlus::Pcap++)
