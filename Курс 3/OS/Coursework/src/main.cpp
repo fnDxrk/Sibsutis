@@ -6,54 +6,41 @@
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
-#include <iterator>
 #include <ostream>
 
 struct PacketStats {
-    int ethPacketCount = 0;
-    int ipv4PacketCount = 0;
-    int ipv6PacketCount = 0;
-    int tcpPacketCount = 0;
-    int udpPacketCount = 0;
-    int dnsPacketCount = 0;
-    int httpPacketCount = 0;
-    int sslPacketCount = 0;
+    std::array<int, 8> packetCounts = { 0 }; // 0: Ethernet, 1: IPv4, ..., 7: SSL
 
-    void clear() { ethPacketCount = ipv4PacketCount = ipv6PacketCount = tcpPacketCount = udpPacketCount = dnsPacketCount = httpPacketCount = sslPacketCount = 0; }
-
-    PacketStats() = default;
+    void clear() { packetCounts.fill(0); }
 
     void consumePacket(pcpp::Packet& packet)
     {
         if (packet.isPacketOfType(pcpp::Ethernet))
-            ethPacketCount++;
+            packetCounts[0]++;
         if (packet.isPacketOfType(pcpp::IPv4))
-            ipv4PacketCount++;
+            packetCounts[1]++;
         if (packet.isPacketOfType(pcpp::IPv6))
-            ipv6PacketCount++;
+            packetCounts[2]++;
         if (packet.isPacketOfType(pcpp::TCP))
-            tcpPacketCount++;
+            packetCounts[3]++;
         if (packet.isPacketOfType(pcpp::UDP))
-            udpPacketCount++;
+            packetCounts[4]++;
         if (packet.isPacketOfType(pcpp::DNS))
-            dnsPacketCount++;
+            packetCounts[5]++;
         if (packet.isPacketOfType(pcpp::HTTP))
-            httpPacketCount++;
+            packetCounts[6]++;
         if (packet.isPacketOfType(pcpp::SSL))
-            sslPacketCount++;
+            packetCounts[7]++;
     }
 
     void printToConsole()
     {
-        std::cout
-            << "Ethernet packet count: " << ethPacketCount << std::endl
-            << "IPv4 packet count:     " << ipv4PacketCount << std::endl
-            << "IPv6 packet count:     " << ipv6PacketCount << std::endl
-            << "TCP packet count:      " << tcpPacketCount << std::endl
-            << "UDP packet count:      " << udpPacketCount << std::endl
-            << "DNS packet count:      " << dnsPacketCount << std::endl
-            << "HTTP packet count:     " << httpPacketCount << std::endl
-            << "SSL packet count:      " << sslPacketCount << std::endl;
+        const char* labels[] = {
+            "Ethernet", "IPv4", "IPv6", "TCP", "UDP", "DNS", "HTTP", "SSL"
+        };
+        for (size_t i = 0; i < packetCounts.size(); ++i) {
+            std::cout << labels[i] << " packet count: " << packetCounts[i] << std::endl;
+        }
     }
 };
 
@@ -88,10 +75,11 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::system("clear");
+    std::cout << "\033[2J\033[1;1H";
 
     // Main device
-    auto selectedDevice = devices[number_device - 1];
+    auto selectedDevice
+        = devices[number_device - 1];
 
     // Open the device before start capturing/sending packets
     if (!selectedDevice->open()) {
@@ -107,8 +95,7 @@ int main(int argc, char* argv[])
         << "   Default gateway:       " << selectedDevice->getDefaultGateway() << std::endl // get default gateway
         << "   Interface MTU:         " << selectedDevice->getMtu() << std::endl; // get interface MTU
 
-    std::cout << std::endl
-              << "Starting capture with packet vector..." << std::endl;
+    std::cout << "\nStarting capture with packet vector..." << std::endl;
 
     // create an empty packet vector object
     pcpp::RawPacketVector packetVec;
@@ -122,30 +109,20 @@ int main(int argc, char* argv[])
     // stop capturing packets
     selectedDevice->stopCapture();
 
-    std::cout << std::endl;
-
-    std::cout << "IP Address packet : " << std::endl;
+    std::cout << "\nIP Address packet : " << std::endl;
 
     for (const auto& packet : packetVec) {
         pcpp::Packet parsedPacket(packet);
         stats.consumePacket(parsedPacket);
 
-        if (parsedPacket.isPacketOfType(pcpp::IPv4)) {
-            auto ipv4Header = parsedPacket.getLayerOfType<pcpp::IPv4Layer>();
-            if (ipv4Header != nullptr) {
-                std::cout << "IPv4 Packet: " << ipv4Header->getSrcIPv4Address() << " -> " << ipv4Header->getDstIPAddress() << std::endl;
-            }
-        } else if (parsedPacket.isPacketOfType(pcpp::IPv6)) {
-            auto ipv6Header = parsedPacket.getLayerOfType<pcpp::IPv6Layer>();
-            if (ipv6Header != nullptr) {
-                std::cout << "IPv6 Packet: " << ipv6Header->getSrcIPAddress() << " -> " << ipv6Header->getDstIPAddress() << std::endl;
-            }
+        if (auto ipv4Header = parsedPacket.getLayerOfType<pcpp::IPv4Layer>(); ipv4Header) {
+            std::cout << "IPv4 Packet: " << ipv4Header->getSrcIPv4Address() << " -> " << ipv4Header->getDstIPAddress() << std::endl;
+        } else if (auto ipv6Header = parsedPacket.getLayerOfType<pcpp::IPv6Layer>(); ipv6Header) {
+            std::cout << "IPv6 Packet: " << ipv6Header->getSrcIPAddress() << " -> " << ipv6Header->getDstIPAddress() << std::endl;
         }
     }
 
-    std::cout << std::endl;
-
     // Print results
-    std::cout << "Results:" << std::endl;
+    std::cout << "\nResults:" << std::endl;
     stats.printToConsole();
 }
