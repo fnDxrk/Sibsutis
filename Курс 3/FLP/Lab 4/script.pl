@@ -32,7 +32,9 @@ grandson(X, Y) :- parent(Y, Z), parent(Z, X), male(X).
 
 aunt(X, Y) :- parent(Z, Y), sister(X, Z).
 
-two_children(X) :- parent(X, A), parent(X, B), A \= B.
+two_children(X) :- 
+    setof(Z, parent(X, Z), Children), 
+    length(Children, 2).
 
 man_with_son(X) :- father(X, Y), male(Y).
 
