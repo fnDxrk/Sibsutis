@@ -9,15 +9,12 @@ print_odd_descending(Current, Lower) :-
 
 startFirst :-
 
-    % Ввод нижней границы диапазона
     writeln('Введите нижнюю границу диапазона:'),
     read(Lower),
     
-    % Ввод верхней границы диапазона
     writeln('Введите верхнюю границу диапазона:'),
     read(Upper),
     
-    % Проверка корректности диапазона
     (Upper >= Lower -> print_odd_descending(Upper, Lower)
         
     ;   writeln('Ошибка: верхняя граница должна быть больше или равна нижней.')
