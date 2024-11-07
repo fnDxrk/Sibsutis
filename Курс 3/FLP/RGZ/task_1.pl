@@ -1,10 +1,10 @@
 double_elements([], []).
-double_elements([H|T], [H,H|R]) :-
-    double_elements(T, R).
+double_elements([Head|Tail], [Head,Head|DoubledTail]) :-
+    double_elements(Tail, DoubledTail).
 
-main :-
-    write('Input list: '),
-    read(List),
-    double_elements(List, DoubledList),
-    write('Doubled list: '),
-    write(DoubledList), nl.
+task_1 :-
+    write('Введите список : '),
+    read(InputList),
+    double_elements(InputList, DoubledList),
+    write('Удвоенный список : '),
+    format('Удвоенный список : ~w\n', [DoubledList]).
