@@ -22,13 +22,14 @@ process_lines(InStream, OutStream) :-
 
 justify_words(WordsList, JustifiedLine) :-
     length(WordsList, WordCount),
-    WordCount > 1,                           
+    (WordCount =< 1 -> atomic_list_concat(WordsList, " ", JustifiedLine)
+    ;
     maplist(string_length, WordsList, WordLengths),
     sum_list(WordLengths, TotalWordLength),
     RequiredSpaces is 80 - TotalWordLength,
     NumberOfGaps is WordCount - 1,
     BaseSpaces is RequiredSpaces // NumberOfGaps,
-    ExtraSpaces is RequiredSpaces mod NumberOfGaps,
+    ExtraSpaces is RequiredSpaces mod NumberOfGaps),
     distribute_spaces(WordsList, BaseSpaces, ExtraSpaces, JustifiedLine).
 
 distribute_spaces([Word], _, _, Word).     
