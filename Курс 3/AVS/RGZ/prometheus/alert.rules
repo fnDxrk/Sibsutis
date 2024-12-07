@@ -1,0 +1,14 @@
+# Это правило срабатывает, когда Prometheus не может получить данные от экспортера (если метрика up равна 0).
+# Оно отправит оповещение, пометив его как критическое (severity: critical), с подробным описанием того, что произошло, и с меткой, которая указывает, какой именно целевой экземпляр исчез.
+
+groups: 
+- name: test
+  rules:
+  - alert: Prometheus Target Missing
+    expr: up == 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Prometheus target missing (instance {{ $labels.instance }})"
+      description: "A Prometheus target has disappeared. An exporter might be crashed.\n VALUE = {{ $value }}\nLABELS: {{ $labels }}"
