@@ -2,7 +2,7 @@ route:
     receiver: ''
 
 receivers:
-- name: 'alert_bot'
+- name: 'alert-bot'
   webhook_configs:
   - send_resolved: true
-    url: 'http://alert_bot:8080'
+    url: 'http://alert-bot:8080'
