@@ -1,0 +1,129 @@
+services:
+
+    traefik:
+        image: traefik:v3.2
+        container_name: traefik
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+            - "./letsencrypt:/letsencrypt"
+            - "./certs:/certs"
+        command:
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.web.address=:80"
+            - "--entrypoints.websecure.address=:443"
+            - "--entrypoints.traefik.address=:3000" 
+            - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
+            - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=ovh"
+            - "--certificatesresolvers.myresolver.acme.email=${TEST_EMAIL}"
+            - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+
+        labels:
+            - "traefik.enable=true"
+        ports:
+            - "80:80"
+            - "443:443"
+            - "3000:3000"
+        networks:
+            - monitoring
+    
+    prometheus:
+        image: prom/prometheus:latest
+        container_name: prometheus
+        restart: unless-stopped
+        volumes:
+            - "./prometheus:/etc/prometheus/"
+            - "prometheus_data:/prometheus"
+        command:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus"
+            - "--web.console.libraries=/etc/prometheus/console_libraries"
+            - "--web.console.templates=/etc/prometheus/consoles"
+            - "--web.enable-lifecycle"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.prometheus.rule=Host(`prometheus.example.com`)"
+            - "traefik.http.routers.prometheus.entrypoints=websecure"
+            - "traefik.http.routers.prometheus.tls.certresolver=myresolver"
+        networks:
+            - monitoring
+
+    grafana:
+        image: grafana/grafana:latest
+        container_name: grafana
+        restart: unless-stopped
+        volumes:
+            - "grafana-storage:/var/lib/grafana"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.grafana.rule=Host(`grafana.example.com`)"
+            - "traefik.http.routers.grafana.entrypoints=websecure"
+            - "traefik.http.routers.grafana.tls.certresolver=myresolver"
+        networks:
+            - monitoring
+
+    node-exporter:
+        image: prom/node-exporter:latest
+        container_name: node-exporter
+        restart: unless-stopped
+        volumes:
+            - "/proc:/host/proc:ro"
+            - "/sys:/host/sys:ro"
+            - "/:/rootfs:ro"
+        command:
+            - "--path.procfs=/host/proc"
+            - "--path.sysfs=/host/sys"
+            - "--collector.filesystem.ignored-mount-points"
+            - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+        ports:
+            - "9100:9100"
+        networks:
+            - monitoring
+        
+    alertmanager-bot:
+        image: metalmatze/alertmanager-bot:latest
+        container_name: alertmanager-bot
+        hostname: alertmanager-bot
+        restart: unless-stopped
+        volumes:
+            - "./data:/data"
+        command:
+            - "--alertmanager.url=http://alertmanager:9093"
+            - "--log.level=info"
+            - "--store=bolt"
+            - "--bolt.path=./data/bot.db"
+            - "--telegram.admin=${TGBOT_ADMIN}"
+            - "--telegram.token=${TGBOT_TOKEN}"
+        ports:
+            - "8080:8080"
+        networks:
+            - monitoring
+    
+    alertmanager:
+        image: prom/alertmanager:latest
+        container_name: alertmanager
+        hostname: alertmanager
+        restart: unless-stopped
+        volumes:
+            - "./alertmanager/alertmanager.yml:/etc/alertmanager/config.yml"
+        command: 
+            - "--config.file=/etc/alertmanager/config.yml"
+            - "--storage.path=/etc/alertmanager/data"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.alertmanager.rule=Host(`alertmanager.example.com`)"
+            - "traefik.http.routers.alertmanager.entrypoints=websecure"
+            - "traefik.http.routers.alertmanager.tls.certresolver=myresolver"
+        ports:
+            - "9093:9093"
+        networks:
+            - monitoring
+
+networks:
+    monitoring:
+        external: true
+
+volumes:
+    prometheus_data: {}
+    grafana-storage: {}
