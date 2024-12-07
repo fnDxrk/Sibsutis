@@ -1,5 +1,5 @@
 route:
-    receiver: ''
+    receiver: 'alert-bot'
 
 receivers:
 - name: 'alert-bot'
