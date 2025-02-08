@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,9 +19,9 @@ public class Main {
 //            System.out.println("Режим статистики: " + arguments.statsMode);
 //            System.out.println("Файлы для обработки: " + arguments.inputFiles);
 
-            List<Integer> integerArrayList = new ArrayList<>();
-            List<Float> floatArrayList = new ArrayList<>();
-            List<String> stringArrayList = new ArrayList<>();
+            Set<Integer> integerArrayList = new HashSet<>();
+            Set<Float> floatArrayList = new HashSet<>();
+            Set<String> stringArrayList = new HashSet<>();
 
             FileProcessor fileDataParser = new FileProcessor();
 
@@ -103,7 +105,7 @@ enum StatsMode {
 }
 
 class FileProcessor {
-    public void parseFile(File file, List<Integer> integerList, List<Float> floatList, List<String> stringList) {
+    public void parseFile(File file, Set<Integer> integerList, Set<Float> floatList, Set<String> stringList) {
         try {
             List<String> lines = Files.readAllLines(file.toPath());
             for (String line : lines) {
@@ -114,7 +116,7 @@ class FileProcessor {
         }
     }
 
-    private void parseLine(String line, List<Integer> integerList, List<Float> floatList, List<String> stringList) {
+    private void parseLine(String line, Set<Integer> integerList, Set<Float> floatList, Set<String> stringList) {
         try {
             integerList.add(Integer.parseInt(line));
         } catch (NumberFormatException e1) {
