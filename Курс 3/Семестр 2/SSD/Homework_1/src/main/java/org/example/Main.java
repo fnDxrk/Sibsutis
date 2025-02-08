@@ -2,6 +2,7 @@ package org.example;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,11 +11,33 @@ public class Main {
         try {
             Arguments arguments = parseArguments(args);
 
-            System.out.println("Выходной путь: " + arguments.outputPath);
-            System.out.println("Префикс: " + arguments.prefix);
-            System.out.println("Режим добавления: " + arguments.appendEnabled);
-            System.out.println("Режим статистики: " + arguments.statsMode);
-            System.out.println("Файлы для обработки: " + arguments.inputFiles);
+//            System.out.println("Выходной путь: " + arguments.outputPath);
+//            System.out.println("Префикс: " + arguments.prefix);
+//            System.out.println("Режим добавления: " + arguments.appendEnabled);
+//            System.out.println("Режим статистики: " + arguments.statsMode);
+//            System.out.println("Файлы для обработки: " + arguments.inputFiles);
+
+            List<Integer> integerArrayList = new ArrayList<>();
+            List<Float> floatArrayList = new ArrayList<>();
+            List<String> stringArrayList = new ArrayList<>();
+
+            FileProcessor fileDataParser = new FileProcessor();
+
+            for (String fileName : arguments.inputFiles) {
+                File file = new File(fileName);
+                if (!file.exists()) {
+                    throw new IOException("Ошибка! Файл "  + fileName + "  не найден.");
+                }
+                fileDataParser.parseFile(file, integerArrayList, floatArrayList, stringArrayList);
+            }
+
+            integerArrayList.forEach(i -> System.out.print(i + " "));
+            System.out.println();
+            floatArrayList.forEach(f -> System.out.print(f + " "));
+            System.out.println();
+            stringArrayList.forEach(s -> System.out.print(s + " "));
+            System.out.println();
+
         } catch (IllegalArgumentException | IOException e) {
             System.err.println("Ошибка: " + e.getMessage());
         }
@@ -77,6 +100,31 @@ public class Main {
 
 enum StatsMode {
     NONE, SHORT, FULL
+}
+
+class FileProcessor {
+    public void parseFile(File file, List<Integer> integerList, List<Float> floatList, List<String> stringList) {
+        try {
+            List<String> lines = Files.readAllLines(file.toPath());
+            for (String line : lines) {
+                parseLine(line, integerList, floatList, stringList);
+            }
+        } catch (IOException e) {
+            System.err.println("Ошибка при чтении файла " + file.getName() + ": " + e.getMessage());
+        }
+    }
+
+    private void parseLine(String line, List<Integer> integerList, List<Float> floatList, List<String> stringList) {
+        try {
+            integerList.add(Integer.parseInt(line));
+        } catch (NumberFormatException e1) {
+            try {
+                floatList.add(Float.parseFloat(line));
+            } catch (NumberFormatException e2) {
+                stringList.add(line);
+            }
+        }
+    }
 }
 
 class Arguments {
