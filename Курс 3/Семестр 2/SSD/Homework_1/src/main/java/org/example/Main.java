@@ -1,54 +1,96 @@
 package org.example;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        try {
+            Arguments arguments = parseArguments(args);
+
+            System.out.println("Выходной путь: " + arguments.outputPath);
+            System.out.println("Префикс: " + arguments.prefix);
+            System.out.println("Режим добавления: " + arguments.appendEnabled);
+            System.out.println("Режим статистики: " + arguments.statsMode);
+            System.out.println("Файлы для обработки: " + arguments.inputFiles);
+        } catch (IllegalArgumentException | IOException e) {
+            System.err.println("Ошибка: " + e.getMessage());
+        }
+    }
+
+    private static Arguments parseArguments(String[] args) throws IOException {
+        if (args.length == 0) {
+            throw new IllegalArgumentException("Ошибка! Параметры отсутствуют.");
+        }
+
+        List<String> inputFiles = new ArrayList<>();
         String outputPath = ".";
         String prefix = "";
         boolean appendEnabled = false;
         StatsMode statsMode = StatsMode.NONE;
 
         for (int i = 0; i < args.length; i++) {
-            switch(args[i]) {
+            switch (args[i]) {
                 case "-o" -> {
                     if (i + 1 < args.length) {
                         outputPath = args[++i];
+                        createOutputDirectory(outputPath);
                     } else {
-                        System.err.println("Ошибка! Отсутствует путь после параметра -o");
-                        System.exit(1);
+                        throw new IllegalArgumentException("Ошибка! Отсутствует путь после параметра -o");
                     }
                 }
                 case "-p" -> {
                     if (i + 1 < args.length) {
                         prefix = args[++i];
                     } else {
-                        System.err.println("Ошибка! Отсутствует префикс после параметра -p");
-                        System.exit(1);
+                        throw new IllegalArgumentException("Ошибка! Отсутствует префикс после параметра -p");
                     }
                 }
-                case "-a"-> appendEnabled = true;
+                case "-a" -> appendEnabled = true;
                 case "-s" -> statsMode = StatsMode.SHORT;
                 case "-f" -> statsMode = StatsMode.FULL;
                 default -> {
-                    System.err.println("Ошибка! Указан неверный параметр: " + args[i]);
-                    System.exit(1);
+                    if (args[i].startsWith("-")) {
+                        throw new IllegalArgumentException("Ошибка! Указан неверный параметр: " + args[i]);
+                    }
+                    inputFiles.add(args[i]);
                 }
             }
         }
 
-        String integersFiles = outputPath + File.separator + prefix + "integers.txt";
-        String floatsFiles = outputPath + File.separator + prefix + "floats.txt";
-        String stringsFiles = outputPath + File.separator +  prefix + "strings.txt";
+        if (inputFiles.isEmpty()) {
+            throw new IllegalArgumentException("Ошибка! Не указаны входные файлы.");
+        }
 
-        System.out.println("Путь для результатов: " + outputPath);
-        System.out.println("Префикс: " + prefix);
-        System.out.println("Режим добавления: " + appendEnabled);
-        System.out.println("Режим статистики: " + statsMode);
-        System.out.println("Полный путь до файла с числами: " + integersFiles);
+        return new Arguments(inputFiles, outputPath, prefix, appendEnabled, statsMode);
+    }
+
+    private static void createOutputDirectory(String outputPath) throws IOException {
+        File outputDir = new File(outputPath);
+        if (!outputDir.exists() && !outputDir.mkdirs()) {
+            throw new IOException("Не удалось создать директорию: " + outputPath);
+        }
     }
 }
 
 enum StatsMode {
     NONE, SHORT, FULL
+}
+
+class Arguments {
+    List<String> inputFiles;
+    String outputPath;
+    String prefix;
+    boolean appendEnabled;
+    StatsMode statsMode;
+
+    public Arguments(List<String> inputFiles, String outputPath, String prefix, boolean appendEnabled, StatsMode statsMode) {
+        this.inputFiles = inputFiles;
+        this.outputPath = outputPath;
+        this.prefix = prefix;
+        this.appendEnabled = appendEnabled;
+        this.statsMode = statsMode;
+    }
 }
