@@ -20,6 +20,6 @@ public class Arguments {
     public List<String> getInputFiles() { return inputFiles; }
     public String getOutputPath() { return outputPath; }
     public String getPrefix() { return prefix; }
-    public boolean getAppendEnabled() { return appendEnabled; }
+    public boolean isAppendEnabled() { return appendEnabled; }
     public StatsMode getStatsMode() { return statsMode; }
 }

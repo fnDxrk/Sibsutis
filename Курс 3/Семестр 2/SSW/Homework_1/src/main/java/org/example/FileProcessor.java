@@ -11,10 +11,12 @@ import java.util.Set;
 public class FileProcessor {
     private final Arguments arguments;
     private final DataClassifier classifier;
+    private final Statistics statistics;
 
     public FileProcessor(Arguments arguments) {
         this.arguments = arguments;
         this.classifier = new DataClassifier();
+        this.statistics = new Statistics(classifier);
     }
 
     public void processFiles() throws IOException {
@@ -28,6 +30,7 @@ public class FileProcessor {
             processFile(file);
             writeResults();
         }
+        statistics.printStatistics(arguments.getStatsMode());
     }
 
     private void processFile(File file) {
