@@ -6,12 +6,12 @@ import java.util.function.Function;
 
 public class DataClassifier {
     private final Set<Integer> integerSet = new HashSet<>();
-    private final Set<Double> floatSet = new HashSet<>();
+    private final Set<Float> floatSet = new HashSet<>();
     private final Set<String> stringSet = new HashSet<>();
 
     public void classify(String line) {
         if (tryParse(line, Integer::parseInt, integerSet)) return;
-        if (tryParse(line, Double::parseDouble, floatSet)) return;
+        if (tryParse(line, Float::parseFloat, floatSet)) return;
         stringSet.add(line);
     }
 
@@ -23,4 +23,8 @@ public class DataClassifier {
             return false;
         }
     }
+
+    public Set<Integer> getIntegers() { return integerSet; }
+    public Set<Float> getFloats() { return floatSet; }
+    public Set<String> getStrings() { return stringSet; }
 }
