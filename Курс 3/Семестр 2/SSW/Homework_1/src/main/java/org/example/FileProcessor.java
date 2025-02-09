@@ -3,7 +3,10 @@ package org.example;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.Set;
 
 public class FileProcessor {
     private final Arguments arguments;
@@ -23,6 +26,7 @@ public class FileProcessor {
                 continue;
             }
             processFile(file);
+            writeResults();
         }
     }
 
@@ -41,6 +45,28 @@ public class FileProcessor {
         File outputDir = new File(outputPath);
         if (!outputDir.exists() && !outputDir.mkdirs()) {
             throw new IOException("Не удалось создать директорию: " + outputPath);
+        }
+    }
+
+    private void writeResults() throws IOException {
+        writeDataToFile("integers.txt", classifier.getIntegers());
+        writeDataToFile("floats.txt", classifier.getFloats());
+        writeDataToFile("strings.txt", classifier.getStrings());
+    }
+
+    private <T> void writeDataToFile(String fileName, Set<T> data) throws IOException {
+        if (data.isEmpty()) return;
+
+        Path filePath = Path.of(arguments.getOutputPath(), arguments.getPrefix() + fileName);
+        StandardOpenOption[] options = arguments.isAppendEnabled()
+                ? new StandardOpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.APPEND}
+                : new StandardOpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING};
+
+        List<String> lines = data.stream().map(Object::toString).toList();
+        try {
+            Files.write(filePath, lines, options);
+        } catch (IOException e) {
+            System.err.println("Ошибка при записи в файл " + filePath + ": " + e.getMessage());
         }
     }
 }
