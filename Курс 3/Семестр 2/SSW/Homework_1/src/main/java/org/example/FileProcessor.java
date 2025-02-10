@@ -36,6 +36,7 @@ public class FileProcessor {
 
     private void processFile(Path filePath) {
         try {
+            //Эквивалентно forEach(line -> classifier.classify(line));
             Files.readAllLines(filePath).forEach(classifier::classify);
         } catch (IOException e) {
             System.err.println("Ошибка при чтении файла " + filePath.getFileName() + ": " + e.getMessage());
