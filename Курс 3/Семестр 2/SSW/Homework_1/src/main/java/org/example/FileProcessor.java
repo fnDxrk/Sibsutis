@@ -1,6 +1,5 @@
 package org.example;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,66 +9,67 @@ import java.util.Set;
 
 public class FileProcessor {
     private final Arguments arguments;
-    private final DataClassifier classifier;
-    private final Statistics statistics;
+    private final DataClassifier classifier = new DataClassifier();
+    private final Statistics statistics = new Statistics(classifier);
 
     public FileProcessor(Arguments arguments) {
         this.arguments = arguments;
-        this.classifier = new DataClassifier();
-        this.statistics = new Statistics(classifier);
     }
 
     public void processFiles() throws IOException {
-        createOutputDirectory(arguments.getOutputPath());
+        Path outputPath = Path.of(arguments.getOutputPath());
+        Files.createDirectories(outputPath);
+
         for (String fileName : arguments.getInputFiles()) {
-            File file = new File(fileName);
-            if (!file.exists()) {
+            Path filePath = Path.of(fileName);
+            if (!Files.exists(filePath)) {
                 System.err.println("Ошибка! Файл " + fileName + " не найден.");
                 continue;
             }
-            processFile(file);
-            writeResults();
+            processFile(filePath);
         }
-        statistics.printStatistics(arguments.getStatsMode());
+
+        clearOutputFiles(outputPath);
+        writeResults(outputPath);
+        statistics.printFileStatistics(outputPath, arguments.getPrefix(), arguments.getStatsMode());
     }
 
-    private void processFile(File file) {
+    private void processFile(Path filePath) {
         try {
-            List<String> lines = Files.readAllLines(file.toPath());
-            for (String line : lines) {
-                classifier.classify(line);
-            }
+            Files.readAllLines(filePath).forEach(classifier::classify);
         } catch (IOException e) {
-            System.err.println("Ошибка при чтении файла " + file.getName() + ": " + e.getMessage());
+            System.err.println("Ошибка при чтении файла " + filePath.getFileName() + ": " + e.getMessage());
         }
     }
 
-    private void createOutputDirectory(String outputPath) throws IOException {
-        File outputDir = new File(outputPath);
-        if (!outputDir.exists() && !outputDir.mkdirs()) {
-            throw new IOException("Не удалось создать директорию: " + outputPath);
+    private void clearOutputFiles(Path outputPath) throws IOException {
+        if (!arguments.isAppendEnabled()) {
+            deleteIfExists(outputPath.resolve(arguments.getPrefix() + "integers.txt"));
+            deleteIfExists(outputPath.resolve(arguments.getPrefix() + "floats.txt"));
+            deleteIfExists(outputPath.resolve(arguments.getPrefix() + "strings.txt"));
         }
     }
 
-    private void writeResults() throws IOException {
-        writeDataToFile("integers.txt", classifier.getIntegers());
-        writeDataToFile("floats.txt", classifier.getFloats());
-        writeDataToFile("strings.txt", classifier.getStrings());
+    private void deleteIfExists(Path filePath) throws IOException {
+        if (Files.exists(filePath)) {
+            Files.delete(filePath);
+        }
     }
 
-    private <T> void writeDataToFile(String fileName, Set<T> data) throws IOException {
+    private void writeResults(Path outputPath) throws IOException {
+        writeDataToFile(outputPath, "integers.txt", classifier.getIntegers());
+        writeDataToFile(outputPath, "floats.txt", classifier.getFloats());
+        writeDataToFile(outputPath, "strings.txt", classifier.getStrings());
+    }
+
+    private <T> void writeDataToFile(Path outputPath, String fileName, Set<T> data) throws IOException {
         if (data.isEmpty()) return;
 
-        Path filePath = Path.of(arguments.getOutputPath(), arguments.getPrefix() + fileName);
+        Path filePath = outputPath.resolve(arguments.getPrefix() + fileName);
         StandardOpenOption[] options = arguments.isAppendEnabled()
                 ? new StandardOpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.APPEND}
-                : new StandardOpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING};
+                : new StandardOpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.WRITE};
 
-        List<String> lines = data.stream().map(Object::toString).toList();
-        try {
-            Files.write(filePath, lines, options);
-        } catch (IOException e) {
-            System.err.println("Ошибка при записи в файл " + filePath + ": " + e.getMessage());
-        }
+        Files.write(filePath, data.stream().map(Object::toString).toList(), options);
     }
 }
