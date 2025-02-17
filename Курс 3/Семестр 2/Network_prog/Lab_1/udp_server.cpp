@@ -14,7 +14,12 @@ int main()
     server_addr.sin_addr.s_addr = INADDR_ANY;
     server_addr.sin_port = 0;
 
-    bind(sock, (sockaddr*)&server_addr, sizeof(server_addr));
+    if (bind(sock, (sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+        perror("bind failed");
+        close(sock);
+        return 1;
+    }
+
     socklen_t len = sizeof(server_addr);
     getsockname(sock, (sockaddr*)&server_addr, &len);
     std::cout << "Server listening on port " << ntohs(server_addr.sin_port) << "\n";
