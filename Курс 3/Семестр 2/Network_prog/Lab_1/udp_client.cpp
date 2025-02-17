@@ -6,7 +6,7 @@
 int main(int argc, char* argv[])
 {
     if (argc != 4) {
-        std::cerr << "Usage: " << argv[0] << " <server_ip> <port>\n";
+        std::cerr << "Usage: " << argv[0] << " <server_ip> <port> <iterations>\n";
         return 1;
     }
 
