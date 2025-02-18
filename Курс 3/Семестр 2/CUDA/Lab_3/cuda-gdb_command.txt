@@ -1,0 +1,21 @@
+# Запуск откладчика
+cuda-gdb ./vectorAdd
+
+# Установка точек остановки
+(cuda-gdb) break vectorAdd
+
+# Запуск
+(cuda-gdb) run
+
+# Анализ нитей
+(cuda-gdb) info threads
+
+## Переключение между нитями
+(cuda-gdb) thread <номер_нити>
+
+## Вывод переменной idx
+(cuda-gdb) print idx
+
+# Продолжить выполнение
+(cuda-gdb) continue
+
