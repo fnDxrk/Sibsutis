@@ -6,7 +6,7 @@ __global__ void vectorAdd(const float* A, const float* B, float* C, int N)
 {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx < N) {
-        if (idx == 3 || idx == 7) {
+        if (idx == 3) {
             int* ptr = NULL;
             // Неправильное обращение к памяти: разыменование NULL.
             ptr[0] = 0;
