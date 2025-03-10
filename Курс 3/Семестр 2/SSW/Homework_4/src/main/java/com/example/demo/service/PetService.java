@@ -3,6 +3,8 @@ package com.example.demo.service;
 import com.example.demo.model.Pet;
 import com.example.demo.repository.PetRepository;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class PetService {
@@ -35,4 +37,6 @@ public class PetService {
         }
         petRepository.deleteById(petId);
     }
+
+    public List<Pet> getAllPets() { return new ArrayList<>(petRepository.findAll()); }
 }

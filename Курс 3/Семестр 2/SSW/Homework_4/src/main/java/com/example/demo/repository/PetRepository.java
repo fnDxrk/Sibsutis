@@ -28,4 +28,6 @@ public class PetRepository {
     public void deleteById(Long id) {
         petStore.remove(id);
     }
+
+    public List<Pet> findAll() { return new ArrayList<>(petStore.values());}
 }

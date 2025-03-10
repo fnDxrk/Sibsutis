@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v3")
 public class PetController {
@@ -51,5 +53,11 @@ public class PetController {
         } catch (RuntimeException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/pet")
+    public ResponseEntity<List<Pet>> getAllPets() {
+        List<Pet> pets = petService.getAllPets();
+        return new ResponseEntity<>(pets, HttpStatus.OK);
     }
 }
