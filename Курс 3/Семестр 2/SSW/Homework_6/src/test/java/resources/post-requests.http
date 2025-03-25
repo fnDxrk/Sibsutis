@@ -1,0 +1,50 @@
+###
+POST http://localhost:8080/api/comments
+Content-Type: application/json
+
+{
+  "postId": 11,
+  "authorId": 10,
+  "content": "Some text 2"
+}
+
+###
+POST http://localhost:8080/api/comments
+Content-Type: application/json
+
+{
+  "content": "Второй комментарий.",
+  "authorId": 2,
+  "postId": 20
+}
+
+###
+POST http://localhost:8080/api/comments
+Content-Type: application/json
+
+{
+  "content": "Третий комментарий.",
+  "authorId": 3,
+  "postId": 30
+}
+
+###
+GET http://localhost:8080/api/comments
+Accept: application/json
+
+###
+GET http://localhost:8080/api/comments/2
+Accept: application/json
+
+###
+PUT http://localhost:8080/api/comments/4
+Content-Type: application/json
+
+{
+  "content": "Обновлённый первый комментарий.",
+  "authorId": 1,
+  "postId": 10
+}
+
+###
+DELETE http://localhost:8080/api/comments/1

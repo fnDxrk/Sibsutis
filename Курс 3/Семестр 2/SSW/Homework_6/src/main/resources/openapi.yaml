@@ -1,0 +1,149 @@
+openapi: 3.0.0
+info:
+  description: "API для управления комментариями, позволяющий создавать, получать\
+    , обновлять и удалять комментарии."
+  title: Comment Management API
+  version: 1.0.0
+servers:
+- url: http://localhost:8080/api
+paths:
+  /comments:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Comment'
+                type: array
+          description: Список комментариев успешно получен
+        "404":
+          description: Комментарии не найдены
+      summary: Получить список всех комментариев
+      x-accepts:
+      - application/json
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+        description: Объект комментария для создания
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: Комментарий успешно создан
+        "400":
+          description: Bad request
+        "404":
+          description: Такой комментарий уже существует
+      summary: Создать новый комментарий
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /comments/{id}:
+    delete:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: Комментарий успешно удалён
+        "400":
+          description: Bad request
+        "404":
+          description: Комментарий не найден
+      summary: Удалить комментарий
+      x-accepts:
+      - application/json
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: Комментарий успешно получен
+        "404":
+          description: Комментарий не найден
+      summary: Получить комментарий по идентификатору
+      x-accepts:
+      - application/json
+    put:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+        description: Обновлённый объект комментария
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: Комментарий успешно обновлён
+        "400":
+          description: Bad request
+        "404":
+          description: Комментарий не найден
+      summary: Обновить существующий комментарий
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+components:
+  schemas:
+    Comment:
+      example:
+        createdAt: 2023-03-17T12:00:00Z
+        id: 1
+        postId: 16
+        authorId: 15
+        content: Это пример комментария.
+      properties:
+        id:
+          example: 1
+          type: integer
+        content:
+          example: Это пример комментария.
+          type: string
+        authorId:
+          example: 15
+          type: integer
+        postId:
+          example: 16
+          type: integer
+        createdAt:
+          example: 2023-03-17T12:00:00Z
+          format: date-time
+          type: string
+      required:
+      - content
+      type: object
