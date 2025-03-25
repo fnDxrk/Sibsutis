@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: your_name
+      changes:
+        - createTable:
+            tableName: person
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: age
+                  type: integer
+
+  - changeSet:
+      id: 2
+      author: your_name
+      changes:
+        - createTable:
+            tableName: car
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: manufacturer
+                  type: varchar(255)
+              - column:
+                  name: velocity
+                  type: float
+              - column:
+                  name: kind
+                  type: varchar(255)
+              - column:
+                  name: person_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_car_person
+                    references: person(id)

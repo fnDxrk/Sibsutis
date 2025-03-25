@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: yourname
+      changes:
+        - createTable:
+            tableName: person
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: age
+                  type: INTEGER
+        - createTable:
+            tableName: car
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: manufacturer
+                  type: VARCHAR(255)
+              - column:
+                  name: velocity
+                  type: FLOAT
+              - column:
+                  name: number
+                  type: VARCHAR(255)
+              - column:
+                  name: person_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_car_person
+                    references: person(id)
