@@ -1,40 +1,38 @@
 #include <cuda_runtime.h>
 #include <stdio.h>
 
-#define N 4   // Количество векторов
-#define K 3   // Длина каждого вектора
+#define N 4 // Количество векторов
+#define K 3 // Длина каждого вектора
 
 // Ядро копирования без эмуляции register pressure
-__global__ void copyKernel(const float *a, float *b, int n, int k)
+__global__ void copyKernel(const float* a, float* b, int n, int k)
 {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     int total = n * k;
-    if(idx < total)
-    {
-        // Определяем номер вектора и индекс элемента внутри вектора
-        int i = idx / k;   // номер вектора (0 ... n-1)
-        int j = idx % k;   // позиция элемента внутри вектора (0 ... k-1)
-        // Новая позиция в массиве b: элементы группируются по j
+    if (idx < total) {
+
+        int i = idx / k;
+        int j = idx % k;
+
         int newIdx = j * n + i;
         b[newIdx] = a[idx];
     }
 }
 
 // Ядро с эмуляцией высокого register pressure.
-__global__ void copyKernelWithPressure(const float *a, float *b, int n, int k)
+__global__ void copyKernelWithPressure(const float* a, float* b, int n, int k)
 {
     // Большой локальный массив для эмуляции register pressure
-    __shared__ float dummy[1024]; // Например, можно использовать shared память как эмуляцию
-    // Или можно создать большой массив в регистровой памяти
+    __shared__ float dummy[1024];
+
     float pressure[256];
     for (int i = 0; i < 256; i++) {
         pressure[i] = 0.0f;
     }
-    
+
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     int total = n * k;
-    if(idx < total)
-    {
+    if (idx < total) {
         int i = idx / k;
         int j = idx % k;
         int newIdx = j * n + i;
@@ -67,7 +65,7 @@ int main(void)
     int blocksPerGrid = (totalElements + threadsPerBlock - 1) / threadsPerBlock;
 
     // Запуск ядра копирования без register pressure
-    //copyKernel<<<blocksPerGrid, threadsPerBlock>>>(d_a, d_b, N, K);
+    // copyKernel<<<blocksPerGrid, threadsPerBlock>>>(d_a, d_b, N, K);
     copyKernelWithPressure<<<blocksPerGrid, threadsPerBlock>>>(d_a, d_b, N, K);
 
     // Ожидание завершения всех потоков на устройстве
