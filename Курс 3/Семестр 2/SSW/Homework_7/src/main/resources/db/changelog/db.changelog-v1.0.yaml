@@ -1,0 +1,151 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: your_name
+      changes:
+        - createTable:
+            tableName: customers
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: VARCHAR(255)
+              - column:
+                  name: street
+                  type: VARCHAR(255)
+              - column:
+                  name: zipcode
+                  type: VARCHAR(255)
+
+        - createTable:
+            tableName: items
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: shipping_weight_value
+                  type: NUMERIC(19, 2)
+              - column:
+                  name: description
+                  type: TEXT
+
+        - createTable:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: payment_type
+                  type: VARCHAR(31)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: NUMERIC(19, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_status
+                  type: VARCHAR(50)
+              - column:
+                  name: cash_tendered
+                  type: NUMERIC(19, 2)
+              - column:
+                  name: check_name
+                  type: VARCHAR(255)
+              - column:
+                  name: bank_id
+                  type: VARCHAR(255)
+              - column:
+                  name: credit_number
+                  type: VARCHAR(255)
+              - column:
+                  name: credit_type
+                  type: VARCHAR(255)
+              - column:
+                  name: exp_date
+                  type: TIMESTAMP
+
+        - createTable:
+            tableName: orders
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_order_customer
+                    references: customers(id)
+              - column:
+                  name: payment_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_order_payment
+                    references: payments(id)
+
+        - createTable:
+            tableName: order_details
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: quantity_value
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tax_status
+                  type: VARCHAR(50)
+              - column:
+                  name: item_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_order_detail_item
+                    references: items(id)
+              - column:
+                  name: order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_order_detail_order
+                    references: orders(id)
