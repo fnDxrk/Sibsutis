@@ -7,7 +7,8 @@
 
 class SimplexBigM {
 private:
-    std::vector<Fraction> obj_func_; // Коэффициенты целевой функции
+    std::vector<Fraction> original_obj_func_; // Исходные коэффициенты целевой функции
+    std::vector<Fraction> obj_func_; // Коэффициенты целевой функции (каноническая форма)
     std::vector<std::vector<Fraction>> constraints_; // Коэффициенты ограничений
     std::vector<std::string> signs_; // Знаки ограничений (<=, >=, =)
     std::vector<Fraction> rhs_; // Правая часть ограничений
@@ -28,7 +29,7 @@ private:
     bool is_optimal() const;
     std::pair<size_t, size_t> get_pivot() const;
     void pivot(size_t row, size_t col);
-    void pivot2(size_t row, size_t col);
+    void pivot_phase2(size_t row, size_t col);
     void update_m_row();
     void restore_original_z_row();
     void remove_artificial_vars();

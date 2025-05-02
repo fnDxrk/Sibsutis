@@ -3,13 +3,15 @@
 #include <iomanip>
 #include <algorithm>
 #include <limits>
+#include <sstream>
 
 SimplexBigM::SimplexBigM(const std::vector<Fraction>& obj_func,
                          const std::vector<std::vector<Fraction>>& constraints,
                          const std::vector<std::string>& signs,
                          const std::vector<Fraction>& rhs,
                          const std::string& goal)
-    : obj_func_(obj_func),
+    : original_obj_func_(obj_func), // Сохраняем исходные коэффициенты
+      obj_func_(obj_func),
       constraints_(constraints),
       signs_(signs),
       rhs_(rhs),
@@ -203,9 +205,9 @@ void SimplexBigM::print_default_form() const {
     std::cout << (goal_ == "max" ? "Максимизировать" : "Минимизировать") << "\n";
     std::cout << "Z = ";
     bool first_term = true;
-    for (size_t i = 0; i < obj_func_.size(); ++i) {
-        if (obj_func_[i] != Fraction(0)) {
-            print_term(obj_func_[i], i, first_term);
+    for (size_t i = 0; i < original_obj_func_.size(); ++i) {
+        if (original_obj_func_[i] != Fraction(0)) {
+            print_term(original_obj_func_[i], i, first_term);
         }
     }
     std::cout << "\n\nПри ограничениях:\n";
@@ -395,9 +397,25 @@ void SimplexBigM::pivot(size_t row, size_t col) {
     update_m_row();
 }
 
-void SimplexBigM::pivot2(size_t row, size_t col) {
-    // Заглушка для Фазы II
-    std::cout << "Метод pivot2 пока не реализован\n";
+void SimplexBigM::pivot_phase2(size_t row, size_t col) {
+    // Нормализуем ведущую строку
+    Fraction pivot_val = tableau_[row][col];
+    for (auto& val : tableau_[row]) {
+        val = val / pivot_val;
+    }
+    // Обновляем остальные строки
+    for (size_t i = 0; i < tableau_.size(); ++i) {
+        if (i != row) {
+            Fraction factor = tableau_[i][col];
+            for (size_t j = 0; j < tableau_[i].size(); ++j) {
+                tableau_[i][j] = tableau_[i][j] - factor * tableau_[row][j];
+            }
+        }
+    }
+    // Обновляем базис
+    basis_[row] = col;
+    // Пересчитываем Z-строку
+    restore_original_z_row();
 }
 
 void SimplexBigM::update_m_row() {
@@ -422,13 +440,65 @@ void SimplexBigM::update_m_row() {
 }
 
 void SimplexBigM::restore_original_z_row() {
-    // Заглушка
-    std::cout << "Метод restore_original_z_row пока не реализован\n";
+    // Инициализируем Z-строку нулями
+    std::vector<Fraction> z_row(tableau_[0].size(), Fraction(0));
+    // Заполняем коэффициенты исходной целевой функции
+    size_t num_vars = std::min(obj_func_.size(), z_row.size() - 1);
+    for (size_t j = 0; j < num_vars; ++j) {
+        z_row[j] = -obj_func_[j]; // Для max: -c_j, для min: c_j
+    }
+    // Учитываем текущий базис
+    for (size_t i = 0; i < basis_.size(); ++i) {
+        size_t var_idx = basis_[i];
+        if (var_idx < obj_func_.size()) {
+            Fraction coef = -obj_func_[var_idx]; // Для max: -c_j, для min: c_j
+            for (size_t j = 0; j < z_row.size(); ++j) {
+                z_row[j] = z_row[j] - coef * tableau_[i][j];
+            }
+        }
+    }
+    // Устанавливаем новую Z-строку
+    size_t z_row_idx = has_m_row_ ? z_row_index_ : tableau_.size() - 1;
+    tableau_[z_row_idx] = z_row;
 }
 
 void SimplexBigM::remove_artificial_vars() {
-    // Заглушка
-    std::cout << "Метод remove_artificial_vars пока не реализован\n";
+    // Собираем столбцы искусственных переменных, которые не в базисе
+    std::vector<size_t> cols_to_remove;
+    for (size_t var : artificial_vars_) {
+        if (std::find(basis_.begin(), basis_.end(), var) == basis_.end()) {
+            cols_to_remove.push_back(var);
+        }
+    }
+    // Сортируем в обратном порядке для безопасного удаления
+    std::sort(cols_to_remove.begin(), cols_to_remove.end(), std::greater<size_t>());
+    // Удаляем столбцы
+    for (size_t col : cols_to_remove) {
+        for (auto& row : tableau_) {
+            row.erase(row.begin() + col);
+        }
+        // Обновляем индексы базисных переменных и искусственных переменных
+        for (auto& b : basis_) {
+            if (b > col) --b;
+        }
+        for (auto& av : artificial_vars_) {
+            if (av > col) --av;
+        }
+    }
+    // Проверяем, можно ли удалить M-строку
+    if (has_m_row_ && std::all_of(tableau_[m_row_index_].begin(), tableau_[m_row_index_].end() - 1,
+                                  [](const Fraction& x) { return x == Fraction(0); })) {
+        std::cout << "Удаляем M-строку\n";
+        tableau_.erase(tableau_.begin() + m_row_index_);
+        has_m_row_ = false;
+        m_row_index_ = 0;
+        z_row_index_ = tableau_.size() - 1;
+    }
+    // Обновляем artificial_vars_, оставляя только те, что в базисе
+    artificial_vars_.erase(
+        std::remove_if(artificial_vars_.begin(), artificial_vars_.end(),
+                       [this](size_t var) { return std::find(basis_.begin(), basis_.end(), var) == basis_.end(); }),
+        artificial_vars_.end());
 }
 
 bool SimplexBigM::is_infeasible_due_to_m_row() const {
@@ -449,25 +519,61 @@ bool SimplexBigM::is_infeasible_due_to_m_row() const {
 }
 
 std::vector<Fraction> SimplexBigM::get_current_solution() const {
-    // Заглушка
-    std::cout << "Метод get_current_solution пока не реализован\n";
-    return {};
+    // Инициализируем решение нулями для всех переменных
+    std::vector<Fraction> solution(tableau_[0].size() - 1, Fraction(0));
+    // Заполняем значения базисных переменных
+    for (size_t i = 0; i < basis_.size(); ++i) {
+        size_t var_idx = basis_[i];
+        if (var_idx < solution.size()) {
+            solution[var_idx] = tableau_[i].back();
+        }
+    }
+    // Возвращаем только исходные переменные
+    return std::vector<Fraction>(solution.begin(), solution.begin() + original_vars_);
 }
 
 std::string SimplexBigM::format_solution(const std::vector<Fraction>& solution) const {
-    // Заглушка
-    std::cout << "Метод format_solution пока не реализован\n";
-    return "";
+    std::ostringstream oss;
+    oss << "(";
+    for (size_t i = 0; i < solution.size(); ++i) {
+        oss << solution[i].to_string();
+        if (i < solution.size() - 1) {
+            oss << ";";
+        }
+    }
+    oss << ")";
+    return oss.str();
 }
 
 void SimplexBigM::print_solution() const {
-    // Заглушка
-    std::cout << "Метод print_solution пока не реализован\n";
+    std::cout << "\nОптимальное решение:\n";
+    std::vector<Fraction> solution = get_current_solution();
+    size_t num_vars = tableau_[0].size() - 1;
+    // Выводим все переменные, включая слак-переменные
+    std::vector<Fraction> full_solution(num_vars, Fraction(0));
+    for (size_t i = 0; i < basis_.size(); ++i) {
+        if (basis_[i] < num_vars) {
+            full_solution[basis_[i]] = tableau_[i].back();
+        }
+    }
+    for (size_t i = 0; i < num_vars; ++i) {
+        std::cout << "x" << (i + 1) << " = " << full_solution[i].to_string() << "\n";
+    }
+    // Вычисляем Z (в терминах исходной функции)
+    Fraction z_value = Fraction(0);
+    for (size_t i = 0; i < original_obj_func_.size() && i < full_solution.size(); ++i) {
+        z_value = z_value + original_obj_func_[i] * full_solution[i];
+    }
+    std::cout << "Z = " << z_value.to_string() << "\n\n";
+    // Формат Z_min/max
+    std::cout << "Z_" << goal_ << " = Z" << format_solution(full_solution) << " = " << z_value.to_string() << "\n";
 }
 
 void SimplexBigM::solve() {
+    // Фаза I: Минимизация искусственных переменных
+    std::cout << "Начало Фазы I\n";
     while (true) {
-        update_m_row(); // Обновляем M-строку
+        update_m_row();
         if (has_m_row_ && std::all_of(tableau_[m_row_index_].begin(), tableau_[m_row_index_].end() - 1,
                                       [](const Fraction& x) { return x == Fraction(0); })) {
             print_tableau();
@@ -489,4 +595,37 @@ void SimplexBigM::solve() {
         pivot(pivot_pos.first, pivot_pos.second);
         ++iteration_;
     }
+
+    // Проверяем, остались ли искусственные переменные в базисе с ненулевыми значениями
+    for (size_t i = 0; i < basis_.size(); ++i) {
+        if (std::find(artificial_vars_.begin(), artificial_vars_.end(), basis_[i]) != artificial_vars_.end() &&
+            tableau_[i].back() != Fraction(0)) {
+            print_tableau();
+            std::cout << "Нет допустимого решения (искусственные переменные остались в базисе с ненулевыми значениями)\n";
+            return;
+        }
+    }
+
+    // Удаляем искусственные переменные и M-строку
+    remove_artificial_vars();
+    restore_original_z_row();
+    std::cout << "Начало Фазы II\n";
+    print_tableau();
+
+    // Фаза II: Оптимизация целевой функции
+    while (!is_optimal()) {
+        auto pivot_pos = get_pivot();
+        if (pivot_pos.first == std::numeric_limits<size_t>::max()) {
+            print_tableau();
+            std::cout << "Не удалось продолжить оптимизацию.\n";
+            return;
+        }
+        print_tableau(&pivot_pos);
+        pivot_phase2(pivot_pos.first, pivot_pos.second);
+        ++iteration_;
+    }
+
+    // Выводим финальное решение
+    print_tableau();
+    print_solution();
 }
