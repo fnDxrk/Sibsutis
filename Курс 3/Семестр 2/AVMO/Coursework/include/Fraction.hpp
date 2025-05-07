@@ -28,7 +28,7 @@ public:
     bool operator<=(const Fraction& other) const;
     bool operator>(const Fraction& other) const;
     bool operator>=(const Fraction& other) const;
-    bool operator!=(const Fraction& other) const; // Новый оператор
+    bool operator!=(const Fraction& other) const;
     Fraction abs() const;
     std::string to_string() const;
 

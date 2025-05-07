@@ -2,15 +2,15 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <vector>
 #include <iostream>
 
 std::tuple<std::vector<Fraction>, std::vector<std::vector<Fraction>>,
            std::vector<std::string>, std::vector<Fraction>, std::string>
 read_input(const std::string& filename) {
     std::ifstream file(filename);
-    if (!file.is_open()) {
+    if (!file.is_open())
         throw std::runtime_error("Не удалось открыть файл: " + filename);
-    }
 
     std::vector<Fraction> obj_func;
     std::vector<std::vector<Fraction>> constraints;
@@ -18,76 +18,56 @@ read_input(const std::string& filename) {
     std::vector<Fraction> rhs;
     std::string goal;
 
+    // Чтение первой строки (коэффициенты и цель)
     std::string line;
-    if (!std::getline(file, line)) {
-        file.close();
+    if (!std::getline(file, line))
         throw std::runtime_error("Файл пуст");
-    }
-    goal = line;
-    if (goal != "max" && goal != "min") {
-        file.close();
-        throw std::runtime_error("Недопустимая цель: должна быть 'max' или 'min'");
-    }
 
-    if (!std::getline(file, line)) {
-        file.close();
-        throw std::runtime_error("Отсутствует целевая функция");
-    }
     std::istringstream iss(line);
+    std::vector<std::string> tokens;
     std::string token;
-    while (iss >> token) {
-        try {
-            obj_func.emplace_back(token);
-        } catch (const std::exception& e) {
-            file.close();
-            throw std::runtime_error("Ошибка парсинга коэффициента: " + token);
-        }
-    }
+    while (iss >> token)
+        tokens.push_back(token);
 
+    if (tokens.empty())
+        throw std::runtime_error("Отсутствует целевая функция");
+
+    // Последний токен — цель
+    goal = tokens.back();
+    if (goal != "max" && goal != "min")
+        throw std::runtime_error("Недопустимая цель: " + goal);
+
+    // Остальные токены — коэффициенты
+    for (size_t i = 0; i < tokens.size() - 1; ++i)
+        obj_func.emplace_back(tokens[i]);
+
+    // Чтение ограничений
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         std::vector<Fraction> coeffs;
-        std::string sign, rhs_str;
+        std::string sign;
 
-        while (iss >> token && token != "<=" && token != ">=" && token != "=") {
-            try {
-                coeffs.emplace_back(token);
-            } catch (const std::exception& e) {
-                file.close();
-                throw std::runtime_error("Ошибка парсинга коэффициента: " + token);
-            }
-        }
-        if (token != "<=" && token != ">=" && token != "=") {
-            file.close();
-            throw std::runtime_error("Недопустимый знак: " + line);
-        }
+        while (iss >> token && token != "<=" && token != ">=" && token != "=")
+            coeffs.emplace_back(token);
+
+        if (token != "<=" && token != ">=" && token != "=")
+            throw std::runtime_error("Недопустимый знак в строке: " + line);
+
         sign = token;
-        if (!(iss >> rhs_str)) {
-            file.close();
-            throw std::runtime_error("Отсутствует правая часть: " + line);
-        }
-        Fraction rhs_val;
-        try {
-            rhs_val = Fraction(rhs_str);
-        } catch (const std::exception& e) {
-            file.close();
-            throw std::runtime_error("Ошибка парсинга правой части: " + rhs_str);
-        }
+        if (!(iss >> token))
+            throw std::runtime_error("Отсутствует правая часть в строке: " + line);
 
-        if (coeffs.size() != obj_func.size()) {
-            file.close();
-            throw std::runtime_error("Количество коэффициентов не соответствует");
-        }
+        Fraction rhs_val(token);
+        if (coeffs.size() != obj_func.size())
+            throw std::runtime_error("Неправильное количество коэффициентов в строке: " + line);
 
         constraints.push_back(coeffs);
         signs.push_back(sign);
         rhs.push_back(rhs_val);
     }
 
-    file.close();
-    if (constraints.empty()) {
+    if (constraints.empty())
         throw std::runtime_error("Файл не содержит ограничений");
-    }
 
     return {obj_func, constraints, signs, rhs, goal};
 }
