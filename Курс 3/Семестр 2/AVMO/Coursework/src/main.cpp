@@ -18,7 +18,6 @@ read_input(const std::string& filename) {
     std::vector<Fraction> rhs;
     std::string goal;
 
-    // Чтение первой строки (коэффициенты и цель)
     std::string line;
     if (!std::getline(file, line))
         throw std::runtime_error("Файл пуст");
@@ -32,16 +31,13 @@ read_input(const std::string& filename) {
     if (tokens.empty())
         throw std::runtime_error("Отсутствует целевая функция");
 
-    // Последний токен — цель
     goal = tokens.back();
     if (goal != "max" && goal != "min")
         throw std::runtime_error("Недопустимая цель: " + goal);
 
-    // Остальные токены — коэффициенты
     for (size_t i = 0; i < tokens.size() - 1; ++i)
         obj_func.emplace_back(tokens[i]);
 
-    // Чтение ограничений
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         std::vector<Fraction> coeffs;
