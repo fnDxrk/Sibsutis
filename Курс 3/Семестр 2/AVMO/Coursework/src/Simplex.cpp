@@ -246,11 +246,11 @@ void SimplexBigM::print_tableau(const std::pair<size_t, size_t>* pivot) const {
     std::cout << "Симплекс-таблица (итерация " << iteration_ << "):\n";
     size_t num_vars = tableau_[0].size() - 1;
 
-    std::cout << "     ";
+    std::cout << "     " << std::setw(8) << "1";
     for (size_t j = 0; j < num_vars; ++j) {
         std::cout << std::setw(8) << ("x" + std::to_string(j + 1));
     }
-    std::cout << std::setw(8) << "1" << "\n";
+    std::cout << "\n";
 
     for (size_t i = 0; i < tableau_.size(); ++i) {
         if (i == z_row_index_) {
@@ -260,14 +260,20 @@ void SimplexBigM::print_tableau(const std::pair<size_t, size_t>* pivot) const {
         } else {
             std::cout << "x" << (basis_[i] + 1) << "   ";
         }
-        for (size_t j = 0; j < tableau_[0].size(); ++j) {
+        std::cout << std::setw(8) << tableau_[i][num_vars].to_string();
+        for (size_t j = 0; j < num_vars; ++j) {
             std::cout << std::setw(8) << tableau_[i][j].to_string();
         }
         std::cout << "\n";
     }
     if (pivot && pivot->first != std::numeric_limits<size_t>::max()) {
-        std::cout << "\nВедущий столбец: x" << (pivot->second + 1)
-                  << ", ведущая строка: " << (pivot->first + 1) << "\n";
+        size_t pivot_col = pivot->second;
+        if (pivot_col == num_vars) {
+            std::cout << "\nВедущий столбец: 1";
+        } else {
+            std::cout << "\nВедущий столбец: x" << (pivot_col + 1);
+        }
+        std::cout << ", ведущая строка: " << (pivot->first + 1) << "\n";
     }
     std::cout << "\n";
 }
