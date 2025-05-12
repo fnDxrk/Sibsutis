@@ -41,6 +41,7 @@ private:
     void print_canonical_with_artificial() const;
     void print_tableau(const std::pair<size_t, size_t>* pivot = nullptr) const;
     void print_solution() const;
+    void find_alternative_solutions();
     std::vector<Fraction> get_current_solution() const;
     std::string format_solution(const std::vector<Fraction>& solution) const;
 

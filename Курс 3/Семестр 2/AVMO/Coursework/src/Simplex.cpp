@@ -487,7 +487,7 @@ std::string SimplexBigM::format_solution(const std::vector<Fraction>& solution) 
     for (size_t i = 0; i < solution.size(); ++i) {
         oss << solution[i].to_string();
         if (i < solution.size() - 1) {
-            oss << ";";
+            oss << ", ";
         }
     }
     oss << ")";
@@ -513,6 +513,89 @@ void SimplexBigM::print_solution() const {
     }
     std::cout << "Z = " << z_value.to_string() << "\n\n";
     std::cout << "Z_" << goal_ << " = Z" << format_solution(full_solution) << " = " << z_value.to_string() << "\n";
+}
+
+void SimplexBigM::find_alternative_solutions() {
+    //std::cout << "\nПроверка альтернативных оптимальных решений:\n";
+    size_t z_row_idx = has_m_row_ ? z_row_index_ : tableau_.size() - 1;
+    
+    // Находим не базисные переменные с нулевым коэффициентом в Z-строке
+    std::vector<size_t> non_basis_zero;
+    for (size_t j = 0; j < tableau_[z_row_idx].size() - 1; ++j) {
+        if (std::find(basis_.begin(), basis_.end(), j) == basis_.end() && tableau_[z_row_idx][j] == Fraction(0)) {
+            non_basis_zero.push_back(j);
+        }
+    }
+
+    if (non_basis_zero.empty()) {
+        //std::cout << "Альтернативные оптимальные решения отсутствуют.\n";
+        return;
+    }
+
+    // Сохраняем текущее состояние для восстановления
+    auto original_tableau = tableau_;
+    auto original_basis = basis_;
+    std::vector<std::vector<Fraction>> solutions;
+    solutions.push_back(get_current_solution()); // Первое решение
+
+    // Проверяем каждую не базисную переменную с Z_j = 0
+    for (size_t col : non_basis_zero) {
+        std::vector<std::pair<size_t, Fraction>> ratios;
+        for (size_t i = 0; i < tableau_.size() - 1; ++i) {
+            if (tableau_[i][col] > Fraction(0)) {
+                ratios.emplace_back(i, tableau_[i].back() / tableau_[i][col]);
+            }
+        }
+        if (!ratios.empty()) {
+            auto min_it = std::min_element(ratios.begin(), ratios.end(),
+                [](const auto& a, const auto& b) { return a.second < b.second; });
+            size_t row = min_it->first;
+            
+            // Выполняем вращение
+            pivot_phase2(row, col);
+            std::cout << "Альтернативное оптимальное решение:\n";
+            print_solution();
+            solutions.push_back(get_current_solution());
+            
+            // Восстанавливаем таблицу
+            tableau_ = original_tableau;
+            basis_ = original_basis;
+        }
+    }
+
+    // Вывод общего вида решения (для первых двух решений)
+    if (solutions.size() >= 2) {
+        std::cout << "\nСуществует бесконечно много оптимальных решений.\n";
+        std::cout << "Общий вид:\n λ * X₁ + (1-λ) * X₂, где 0 ≤ λ ≤ 1\n";
+        std::cout << "X₁ = " << format_solution(solutions[0]) << "\n";
+        std::cout << "X₂ = " << format_solution(solutions[1]) << "\n\n";
+
+        // Вычисляем общее решение в раскрытом виде
+        std::cout << "Общее решение в раскрытом виде:\n(";
+        for (size_t i = 0; i < solutions[0].size(); ++i) {
+            Fraction coef_lambda = solutions[0][i] - solutions[1][i];
+            Fraction const_term = solutions[1][i];
+            if (coef_lambda != Fraction(0)) {
+                std::cout << const_term.to_string();
+                if (coef_lambda > Fraction(0)) {
+                    std::cout << " + " << coef_lambda.to_string() << "λ";
+                } else {
+                    std::cout << " - " << (-coef_lambda).to_string() << "λ";
+                }
+            } else {
+                std::cout << const_term.to_string();
+            }
+            if (i < solutions[0].size() - 1) std::cout << ", ";
+        }
+        std::cout << ")\n";
+
+        // Проверяем значение Z
+        Fraction z_value = Fraction(0);
+        for (size_t i = 0; i < original_obj_func_.size() && i < solutions[0].size(); ++i) {
+            z_value = z_value + original_obj_func_[i] * solutions[0][i];
+        }
+        std::cout << "Z = " << z_value.to_string() << "\n";
+    }
 }
 
 void SimplexBigM::solve() {
@@ -571,4 +654,5 @@ void SimplexBigM::solve() {
 
     print_tableau();
     print_solution();
+    find_alternative_solutions(); // Добавляем вызов
 }
