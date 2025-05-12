@@ -246,11 +246,11 @@ void SimplexBigM::print_tableau(const std::pair<size_t, size_t>* pivot) const {
     std::cout << "Симплекс-таблица (итерация " << iteration_ << "):\n";
     size_t num_vars = tableau_[0].size() - 1;
 
-    std::cout << "     " << std::setw(8) << "1";
+    std::cout << "     ";
     for (size_t j = 0; j < num_vars; ++j) {
         std::cout << std::setw(8) << ("x" + std::to_string(j + 1));
     }
-    std::cout << "\n";
+    std::cout << std::setw(8) << "1" << "\n";
 
     for (size_t i = 0; i < tableau_.size(); ++i) {
         if (i == z_row_index_) {
@@ -260,20 +260,14 @@ void SimplexBigM::print_tableau(const std::pair<size_t, size_t>* pivot) const {
         } else {
             std::cout << "x" << (basis_[i] + 1) << "   ";
         }
-        std::cout << std::setw(8) << tableau_[i][num_vars].to_string();
-        for (size_t j = 0; j < num_vars; ++j) {
+        for (size_t j = 0; j < tableau_[0].size(); ++j) {
             std::cout << std::setw(8) << tableau_[i][j].to_string();
         }
         std::cout << "\n";
     }
     if (pivot && pivot->first != std::numeric_limits<size_t>::max()) {
-        size_t pivot_col = pivot->second;
-        if (pivot_col == num_vars) {
-            std::cout << "\nВедущий столбец: 1";
-        } else {
-            std::cout << "\nВедущий столбец: x" << (pivot_col + 1);
-        }
-        std::cout << ", ведущая строка: " << (pivot->first + 1) << "\n";
+        std::cout << "\nВедущий столбец: x" << (pivot->second + 1)
+                  << ", ведущая строка: " << (pivot->first + 1) << "\n";
     }
     std::cout << "\n";
 }
@@ -296,6 +290,7 @@ bool SimplexBigM::is_optimal() const {
 }
 
 std::pair<size_t, size_t> SimplexBigM::get_pivot() const {
+    // Если есть M-строка (Фаза I)
     if (has_m_row_) {
         const auto& m_row = tableau_[m_row_index_];
         Fraction min_val = Fraction(0);
@@ -306,34 +301,25 @@ std::pair<size_t, size_t> SimplexBigM::get_pivot() const {
                 col = j;
             }
         }
-        if (col != std::numeric_limits<size_t>::max()) {
-            std::vector<std::pair<size_t, Fraction>> ratios;
-            for (size_t i = 0; i < tableau_.size() - (has_m_row_ ? 2 : 1); ++i) {
-                if (tableau_[i][col] > Fraction(0)) {
-                    ratios.emplace_back(i, tableau_[i].back() / tableau_[i][col]);
-                }
-            }
-            if (ratios.empty()) {
-                bool all_non_positive = true;
-                for (size_t i = 0; i < tableau_.size() - (has_m_row_ ? 2 : 1); ++i) {
-                    if (tableau_[i][col] > Fraction(0)) {
-                        all_non_positive = false;
-                        break;
-                    }
-                }
-                if (all_non_positive) {
-                    std::cout << "Решение не ограничено: симплекс-метод не может продолжаться.\n";
-                } else {
-                    std::cout << "Нет допустимого решения: невозможно выбрать ведущую строку.\n";
-                }
-                return {std::numeric_limits<size_t>::max(), std::numeric_limits<size_t>::max()};
-            }
-            auto min_it = std::min_element(ratios.begin(), ratios.end(),
-                                          [](const auto& a, const auto& b) { return a.second < b.second; });
-            return {min_it->first, col};
+        if (col == std::numeric_limits<size_t>::max()) {
+            return {std::numeric_limits<size_t>::max(), std::numeric_limits<size_t>::max()};
         }
+        std::vector<std::pair<size_t, Fraction>> ratios;
+        for (size_t i = 0; i < tableau_.size() - (has_m_row_ ? 2 : 1); ++i) {
+            if (tableau_[i][col] > Fraction(0)) {
+                ratios.emplace_back(i, tableau_[i].back() / tableau_[i][col]);
+            }
+        }
+        if (ratios.empty()) {
+            std::cout << "Решение не ограничено: симплекс-метод не может продолжаться.\n";
+            return {std::numeric_limits<size_t>::max(), std::numeric_limits<size_t>::max()};
+        }
+        auto min_it = std::min_element(ratios.begin(), ratios.end(),
+                                      [](const auto& a, const auto& b) { return a.second < b.second; });
+        return {min_it->first, col};
     }
 
+    // Фаза II: выбор столбца с наиболее отрицательным коэффициентом в Z-строке
     const auto& z_row = has_m_row_ ? tableau_[z_row_index_] : tableau_.back();
     Fraction min_val = Fraction(0);
     size_t col = std::numeric_limits<size_t>::max();
@@ -343,35 +329,26 @@ std::pair<size_t, size_t> SimplexBigM::get_pivot() const {
             col = j;
         }
     }
-    if (col != std::numeric_limits<size_t>::max()) {
-        std::vector<std::pair<size_t, Fraction>> ratios;
-        size_t limit = has_m_row_ ? tableau_.size() - 2 : tableau_.size() - 1;
-        for (size_t i = 0; i < limit; ++i) {
-            if (tableau_[i][col] > Fraction(0)) {
-                ratios.emplace_back(i, tableau_[i].back() / tableau_[i][col]);
-            }
-        }
-        if (ratios.empty()) {
-            bool all_non_positive = true;
-            for (size_t i = 0; i < limit; ++i) {
-                if (tableau_[i][col] > Fraction(0)) {
-                    all_non_positive = false;
-                    break;
-                }
-            }
-            if (all_non_positive) {
-                std::cout << "Решение не ограничено.\n";
-            } else {
-                std::cout << "Нет допустимого решения: невозможно выбрать ведущую строку.\n";
-            }
-            return {std::numeric_limits<size_t>::max(), std::numeric_limits<size_t>::max()};
-        }
-        auto min_it = std::min_element(ratios.begin(), ratios.end(),
-                                      [](const auto& a, const auto& b) { return a.second < b.second; });
-        return {min_it->first, col};
+    if (col == std::numeric_limits<size_t>::max()) {
+        // Нет отрицательных коэффициентов, решение оптимально
+        return {std::numeric_limits<size_t>::max(), std::numeric_limits<size_t>::max()};
     }
 
-    return {std::numeric_limits<size_t>::max(), std::numeric_limits<size_t>::max()};
+    // Выбор ведущей строки
+    std::vector<std::pair<size_t, Fraction>> ratios;
+    size_t limit = has_m_row_ ? tableau_.size() - 2 : tableau_.size() - 1;
+    for (size_t i = 0; i < limit; ++i) {
+        if (tableau_[i][col] > Fraction(0)) {
+            ratios.emplace_back(i, tableau_[i].back() / tableau_[i][col]);
+        }
+    }
+    if (ratios.empty()) {
+        std::cout << "Решение не ограничено.\n";
+        return {std::numeric_limits<size_t>::max(), std::numeric_limits<size_t>::max()};
+    }
+    auto min_it = std::min_element(ratios.begin(), ratios.end(),
+                                   [](const auto& a, const auto& b) { return a.second < b.second; });
+    return {min_it->first, col};
 }
 
 void SimplexBigM::pivot(size_t row, size_t col) {
@@ -539,6 +516,7 @@ void SimplexBigM::print_solution() const {
 }
 
 void SimplexBigM::solve() {
+    // Фаза I
     while (true) {
         update_m_row();
         if (has_m_row_ && std::all_of(tableau_[m_row_index_].begin(), tableau_[m_row_index_].end() - 1,
@@ -554,7 +532,11 @@ void SimplexBigM::solve() {
         auto pivot_pos = get_pivot();
         if (pivot_pos.first == std::numeric_limits<size_t>::max()) {
             print_tableau();
-            std::cout << "Нет допустимого решения или решение не ограничено.\n";
+            if (is_infeasible_due_to_m_row()) {
+                std::cout << "Система ограничений несовместна.\n";
+            } else {
+                break; // Завершаем Фазу I
+            }
             return;
         }
         print_tableau(&pivot_pos);
@@ -562,6 +544,7 @@ void SimplexBigM::solve() {
         ++iteration_;
     }
 
+    // Проверка искусственных переменных
     for (size_t i = 0; i < basis_.size(); ++i) {
         if (std::find(artificial_vars_.begin(), artificial_vars_.end(), basis_[i]) != artificial_vars_.end() &&
             tableau_[i].back() != Fraction(0)) {
@@ -571,15 +554,15 @@ void SimplexBigM::solve() {
         }
     }
 
+    // Удаление искусственных переменных и восстановление Z-строки
     remove_artificial_vars();
     restore_original_z_row();
 
+    // Фаза II
     while (!is_optimal()) {
         auto pivot_pos = get_pivot();
         if (pivot_pos.first == std::numeric_limits<size_t>::max()) {
-            print_tableau();
-            std::cout << "Не удалось продолжить оптимизацию.\n";
-            return;
+            break; // Оптимальное решение найдено
         }
         print_tableau(&pivot_pos);
         pivot_phase2(pivot_pos.first, pivot_pos.second);
