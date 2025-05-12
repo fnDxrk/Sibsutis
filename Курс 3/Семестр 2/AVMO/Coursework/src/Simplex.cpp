@@ -127,7 +127,8 @@ void SimplexBigM::build_initial_tableau() {
     size_t num_constraints = constraints_.size();
     size_t num_vars = constraints_[0].size();
 
-    size_t num_rows = num_constraints + 1 + (artificial_vars_.empty() ? 0 : 1);
+    // Всегда добавляем M-строку
+    size_t num_rows = num_constraints + 2; // Ограничения + Z-строка + M-строка
     tableau_.resize(num_rows, std::vector<Fraction>(num_vars + 1, Fraction(0)));
 
     for (size_t i = 0; i < num_constraints; ++i) {
@@ -137,39 +138,26 @@ void SimplexBigM::build_initial_tableau() {
         tableau_[i][num_vars] = rhs_[i];
     }
 
-    z_row_index_ = num_rows - 1;
-    if (!artificial_vars_.empty()) {
-        z_row_index_--;
-        m_row_index_ = num_rows - 1;
-    }
+    z_row_index_ = num_constraints;
+    m_row_index_ = num_constraints + 1;
+    has_m_row_ = true;
+
+    // Устанавливаем Z-строку как c_j (для максимизации)
     for (size_t j = 0; j < num_vars; ++j) {
-        tableau_[z_row_index_][j] = -obj_func_[j];
+        tableau_[z_row_index_][j] = obj_func_[j]; // Без инверсии
     }
     tableau_[z_row_index_][num_vars] = Fraction(0);
 
-    if (!artificial_vars_.empty()) {
-        for (size_t j = 0; j < num_vars; ++j) {
-            Fraction sum(0);
-            for (size_t i = 0; i < num_constraints; ++i) {
-                if (std::find(artificial_vars_.begin(), artificial_vars_.end(), basis_[i]) != artificial_vars_.end()) {
-                    sum = sum + constraints_[i][j];
-                }
-            }
-            if (std::find(artificial_vars_.begin(), artificial_vars_.end(), j) != artificial_vars_.end()) {
-                sum = Fraction(0);
-            }
-            tableau_[m_row_index_][j] = -sum;
-        }
-        Fraction sum_b(0);
-        for (size_t i = 0; i < num_constraints; ++i) {
-            if (std::find(artificial_vars_.begin(), artificial_vars_.end(), basis_[i]) != artificial_vars_.end()) {
-                sum_b = sum_b + rhs_[i];
+    // Инициализируем M-строку как -∑(строки с искусственными переменными)
+    std::vector<Fraction> m_row(num_vars + 1, Fraction(0));
+    for (size_t i = 0; i < basis_.size(); ++i) {
+        if (std::find(artificial_vars_.begin(), artificial_vars_.end(), basis_[i]) != artificial_vars_.end()) {
+            for (size_t j = 0; j < num_vars + 1; ++j) {
+                m_row[j] = m_row[j] - tableau_[i][j];
             }
         }
-        tableau_[m_row_index_][num_vars] = -sum_b;
-    } else {
-        has_m_row_ = false;
     }
+    tableau_[m_row_index_] = m_row;
 }
 
 void SimplexBigM::print_term(const Fraction& coef, size_t index, bool& first_term) const {
@@ -273,16 +261,22 @@ void SimplexBigM::print_tableau(const std::pair<size_t, size_t>* pivot) const {
 }
 
 bool SimplexBigM::is_optimal() const {
+    // Проверяем M-строку, если она есть
     if (has_m_row_) {
         for (size_t j = 0; j < tableau_[m_row_index_].size() - 1; ++j) {
             if (tableau_[m_row_index_][j] < Fraction(0)) {
                 return false;
             }
         }
+        // Если M-строка нулевая, считаем её обработанной
+        if (std::all_of(tableau_[m_row_index_].begin(), tableau_[m_row_index_].end() - 1,
+                        [](const Fraction& x) { return x == Fraction(0); })) {
+            return false; // Переходим к Фазе II
+        }
     }
-    size_t target_row = has_m_row_ ? z_row_index_ : tableau_.size() - 1;
-    for (size_t j = 0; j < tableau_[target_row].size() - 1; ++j) {
-        if (tableau_[target_row][j] < Fraction(0)) {
+    // Проверяем Z-строку
+    for (size_t j = 0; j < tableau_[z_row_index_].size() - 1; ++j) {
+        if (tableau_[z_row_index_][j] < Fraction(0)) {
             return false;
         }
     }
@@ -305,13 +299,14 @@ std::pair<size_t, size_t> SimplexBigM::get_pivot() const {
             return {std::numeric_limits<size_t>::max(), std::numeric_limits<size_t>::max()};
         }
         std::vector<std::pair<size_t, Fraction>> ratios;
-        for (size_t i = 0; i < tableau_.size() - (has_m_row_ ? 2 : 1); ++i) {
+        for (size_t i = 0; i < tableau_.size() - 2; ++i) {
             if (tableau_[i][col] > Fraction(0)) {
                 ratios.emplace_back(i, tableau_[i].back() / tableau_[i][col]);
+            } else if (tableau_[i][col] == Fraction(0) && tableau_[i].back() == Fraction(0)) {
+                ratios.emplace_back(i, Fraction(0)); // Учитываем случай b_i = 0, a_{i,j} = 0
             }
         }
         if (ratios.empty()) {
-            std::cout << "Решение не ограничено: симплекс-метод не может продолжаться.\n";
             return {std::numeric_limits<size_t>::max(), std::numeric_limits<size_t>::max()};
         }
         auto min_it = std::min_element(ratios.begin(), ratios.end(),
@@ -320,7 +315,7 @@ std::pair<size_t, size_t> SimplexBigM::get_pivot() const {
     }
 
     // Фаза II: выбор столбца с наиболее отрицательным коэффициентом в Z-строке
-    const auto& z_row = has_m_row_ ? tableau_[z_row_index_] : tableau_.back();
+    const auto& z_row = tableau_[z_row_index_];
     Fraction min_val = Fraction(0);
     size_t col = std::numeric_limits<size_t>::max();
     for (size_t j = 0; j < z_row.size() - 1; ++j) {
@@ -330,20 +325,19 @@ std::pair<size_t, size_t> SimplexBigM::get_pivot() const {
         }
     }
     if (col == std::numeric_limits<size_t>::max()) {
-        // Нет отрицательных коэффициентов, решение оптимально
         return {std::numeric_limits<size_t>::max(), std::numeric_limits<size_t>::max()};
     }
 
     // Выбор ведущей строки
     std::vector<std::pair<size_t, Fraction>> ratios;
-    size_t limit = has_m_row_ ? tableau_.size() - 2 : tableau_.size() - 1;
-    for (size_t i = 0; i < limit; ++i) {
+    for (size_t i = 0; i < tableau_.size() - (has_m_row_ ? 2 : 1); ++i) {
         if (tableau_[i][col] > Fraction(0)) {
             ratios.emplace_back(i, tableau_[i].back() / tableau_[i][col]);
+        } else if (tableau_[i][col] == Fraction(0) && tableau_[i].back() == Fraction(0)) {
+            ratios.emplace_back(i, Fraction(0)); // Учитываем случай b_i = 0, a_{i,j} = 0
         }
     }
     if (ratios.empty()) {
-        std::cout << "Решение не ограничено.\n";
         return {std::numeric_limits<size_t>::max(), std::numeric_limits<size_t>::max()};
     }
     auto min_it = std::min_element(ratios.begin(), ratios.end(),
@@ -407,7 +401,7 @@ void SimplexBigM::restore_original_z_row() {
     std::vector<Fraction> z_row(tableau_[0].size(), Fraction(0));
     size_t num_vars = std::min(obj_func_.size(), z_row.size() - 1);
     for (size_t j = 0; j < num_vars; ++j) {
-        z_row[j] = -obj_func_[j];
+        z_row[j] = -obj_func_[j]; // Для максимизации используем -c_j
     }
     for (size_t i = 0; i < basis_.size(); ++i) {
         size_t var_idx = basis_[i];
@@ -418,8 +412,7 @@ void SimplexBigM::restore_original_z_row() {
             }
         }
     }
-    size_t z_row_idx = has_m_row_ ? z_row_index_ : tableau_.size() - 1;
-    tableau_[z_row_idx] = z_row;
+    tableau_[z_row_index_] = z_row;
 }
 
 void SimplexBigM::remove_artificial_vars() {
@@ -443,7 +436,7 @@ void SimplexBigM::remove_artificial_vars() {
     }
     if (has_m_row_ && std::all_of(tableau_[m_row_index_].begin(), tableau_[m_row_index_].end() - 1,
                                   [](const Fraction& x) { return x == Fraction(0); })) {
-        std::cout << "Удаляем M-строку\n";
+        std::cout << "Удаляем M-строку\n\n";
         tableau_.erase(tableau_.begin() + m_row_index_);
         has_m_row_ = false;
         m_row_index_ = 0;
@@ -495,7 +488,7 @@ std::string SimplexBigM::format_solution(const std::vector<Fraction>& solution) 
 }
 
 void SimplexBigM::print_solution() const {
-    std::cout << "\nОптимальное решение:\n";
+    std::cout << "Оптимальное решение:\n";
     std::vector<Fraction> solution = get_current_solution();
     size_t num_vars = tableau_[0].size() - 1;
     std::vector<Fraction> full_solution(num_vars, Fraction(0));
@@ -599,32 +592,48 @@ void SimplexBigM::find_alternative_solutions() {
 }
 
 void SimplexBigM::solve() {
-    // Фаза I
-    while (true) {
-        update_m_row();
-        if (has_m_row_ && std::all_of(tableau_[m_row_index_].begin(), tableau_[m_row_index_].end() - 1,
-                                      [](const Fraction& x) { return x == Fraction(0); })) {
-            print_tableau();
+    // Выводим начальную таблицу
+    print_tableau();
+
+    // Проверка искусственных переменных в базисе
+    bool has_nonzero_artificial = false;
+    for (size_t i = 0; i < basis_.size(); ++i) {
+        if (std::find(artificial_vars_.begin(), artificial_vars_.end(), basis_[i]) != artificial_vars_.end() &&
+            tableau_[i].back() != Fraction(0)) {
+            has_nonzero_artificial = true;
             break;
         }
-        if (is_infeasible_due_to_m_row()) {
-            print_tableau();
-            std::cout << "Система ограничений несовместна.\n";
-            return;
-        }
-        auto pivot_pos = get_pivot();
-        if (pivot_pos.first == std::numeric_limits<size_t>::max()) {
-            print_tableau();
-            if (is_infeasible_due_to_m_row()) {
-                std::cout << "Система ограничений несовместна.\n";
-            } else {
-                break; // Завершаем Фазу I
+    }
+
+    // Фаза I (только если есть ненулевые искусственные переменные)
+    if (has_nonzero_artificial) {
+        while (true) {
+            update_m_row();
+            if (has_m_row_ && std::all_of(tableau_[m_row_index_].begin(), tableau_[m_row_index_].end() - 1,
+                                          [](const Fraction& x) { return x == Fraction(0); })) {
+                std::cout << "M-строка нулевая, удаляем ее.\n";
+                std::cout << "Удаляем M-строку\n";
+                tableau_.erase(tableau_.begin() + m_row_index_);
+                has_m_row_ = false;
+                z_row_index_ = tableau_.size() - 1;
+                print_tableau();
+                break;
             }
-            return;
+            if (is_infeasible_due_to_m_row()) {
+                print_tableau();
+                std::cout << "Система ограничений несовместна.\n";
+                return;
+            }
+            auto pivot_pos = get_pivot();
+            if (pivot_pos.first == std::numeric_limits<size_t>::max()) {
+                print_tableau();
+                std::cout << "Решение не ограничено или несовместно в Фазе I.\n";
+                return;
+            }
+            print_tableau(&pivot_pos);
+            pivot(pivot_pos.first, pivot_pos.second);
+            ++iteration_;
         }
-        print_tableau(&pivot_pos);
-        pivot(pivot_pos.first, pivot_pos.second);
-        ++iteration_;
     }
 
     // Проверка искусственных переменных
@@ -645,7 +654,29 @@ void SimplexBigM::solve() {
     while (!is_optimal()) {
         auto pivot_pos = get_pivot();
         if (pivot_pos.first == std::numeric_limits<size_t>::max()) {
-            break; // Оптимальное решение найдено
+            // Проверяем, не неограничено ли решение
+            const auto& z_row = tableau_[z_row_index_];
+            bool unbounded = false;
+            for (size_t j = 0; j < z_row.size() - 1; ++j) {
+                if (z_row[j] < Fraction(0)) {
+                    bool has_positive = false;
+                    for (size_t i = 0; i < tableau_.size() - 1; ++i) {
+                        if (tableau_[i][j] > Fraction(0)) {
+                            has_positive = true;
+                            break;
+                        }
+                    }
+                    if (!has_positive) {
+                        unbounded = true;
+                        break;
+                    }
+                }
+            }
+            if (unbounded) {
+                std::cout << "Решение не ограничено.\n";
+                return;
+            }
+            break;
         }
         print_tableau(&pivot_pos);
         pivot_phase2(pivot_pos.first, pivot_pos.second);
@@ -654,5 +685,5 @@ void SimplexBigM::solve() {
 
     print_tableau();
     print_solution();
-    find_alternative_solutions(); // Добавляем вызов
+    find_alternative_solutions();
 }
