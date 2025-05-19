@@ -4,55 +4,56 @@
 #include "Fraction.hpp"
 #include <vector>
 #include <string>
+#include <utility>
 
-class SimplexBigM {
+class Simplex {
 private:
-    std::vector<Fraction> original_obj_func_; // Исходные коэффициенты целевой функции
-    std::vector<Fraction> obj_func_; // Коэффициенты целевой функции (каноническая форма)
-    std::vector<std::vector<Fraction>> constraints_; // Коэффициенты ограничений
-    std::vector<std::string> signs_; // Знаки ограничений (<=, >=, =)
-    std::vector<Fraction> rhs_; // Правая часть ограничений
-    std::string goal_; // Цель (min или max)
-    size_t original_vars_; // Количество исходных переменных
-    std::vector<std::vector<Fraction>> tableau_; // Симплекс-таблица
-    std::vector<size_t> basis_; // Базисные переменные
-    std::vector<size_t> artificial_vars_; // Индексы искусственных переменных
-    bool has_m_row_; // Наличие M-строки
-    size_t z_row_index_; // Индекс Z-строки
-    size_t m_row_index_; // Индекс M-строки
-    int iteration_; // Текущая итерация
-    Fraction M_; // Большое число M
+    std::vector<Fraction> original_objective_coeffs_;               // Исходные коэффициенты целевой функции
+    std::vector<Fraction> objective_coeffs_;                        // Коэффициенты целевой функции после преобразования в каноническую форму
+    std::vector<std::vector<Fraction>> constraint_coeffs_;          // Коэффициенты системы ограничений
+    std::vector<std::string> constraint_signs_;                     // Знаки ограничений ("<=", ">=", "=")
+    std::vector<Fraction> constraint_rhs_;                          // Правая часть ограничений
+    std::string optimization_goal_;                                 // Цель оптимизации: "min" или "max"
+    size_t num_original_vars_;                                      // Количество переменных в изначальной постановке задачи
+    std::vector<std::vector<Fraction>> simplex_tableau_;            // Симплекс-таблица
+    std::vector<size_t> basis_indices_;                             // Индексы базисных переменных
+    std::vector<size_t> artificial_var_indices_;                    // Индексы искусственных переменных
+    bool has_big_m_row_;                                            // Флаг наличия строки большого M (метод искусственного базиса)
+    size_t objective_row_index_;                                    // Индекс строки целевой функции (Z-строки)
+    size_t big_m_row_index_;                                        // Индекс строки большого M
+    size_t current_iteration_;                                      // Номер текущей итерации
+    Fraction big_m_value_;                                          // Значение большого M
 
-    void to_canonical();
-    void add_artificial_vars();
-    void build_initial_tableau();
-    bool is_optimal() const;
-    std::pair<size_t, size_t> get_pivot() const;
-    void pivot(size_t row, size_t col);
-    void pivot_phase2(size_t row, size_t col);
-    void update_m_row();
-    void restore_original_z_row();
-    void remove_artificial_vars();
-    bool is_infeasible_due_to_m_row() const;
-    void print_term(const Fraction& coef, size_t index, bool& first_term) const;
-    void print_equation(const std::vector<Fraction>& coefs, const std::string& sign_or_eq, const Fraction& rhs) const;
-    void print_default_form() const;
-    void print_canonical_form() const;
-    void print_canonical_with_artificial() const;
-    void print_tableau(const std::pair<size_t, size_t>* pivot = nullptr) const;
-    void print_solution() const;
-    void find_alternative_solutions();
-    std::vector<Fraction> get_current_solution() const;
-    std::string format_solution(const std::vector<Fraction>& solution) const;
+    void transform_to_canonical_form();                             // Преобразует задачу в каноническую форму (максимизация, равенства)
+    void add_artificial_variables();                                // Добавляет искусственные переменные для начального базиса
+    void create_initial_simplex_tableau();                          // Создаёт начальную симплекс-таблицу
+    bool is_solution_optimal() const;                               // Проверяет, является ли решение оптимальным
+    std::pair<size_t, size_t> find_pivot_element() const;           // Находит ведущий элемент (строка, столбец)
+    void execute_simplex_pivot(size_t row, size_t col);             // Выполняет симплекс-поворот для выбранного элемента
+    void execute_phase_two_pivot(size_t row, size_t col);           // Выполняет симплекс-поворот для второй фазы
+    void update_big_m_row();                                        // Обновляет строку с большим M после итерации
+    void restore_objective_row();                                   // Восстанавливает строку целевой функции для второй фазы
+    void remove_artificial_variables();                             // Удаляет искусственные переменные из таблицы
+    bool is_infeasible_due_to_big_m_row() const;                    // Проверяет неосуществимость задачи из-за строки M
+    void print_equation_term(const Fraction& coef, size_t index, bool& first_term) const;  // Выводит член уравнения
+    void print_constraint_equation(const std::vector<Fraction>& coefs, const std::string& sign, const Fraction& rhs) const;  // Выводит уравнение ограничения
+    void print_original_problem_form() const;                       // Выводит исходную форму задачи
+    void print_canonical_problem_form() const;                      // Выводит каноническую форму задачи
+    void print_canonical_form_with_artificial_variables() const;    // Выводит каноническую форму с искусственными переменными
+    void print_simplex_tableau(const std::pair<size_t, size_t>* pivot = nullptr) const;   // Выводит текущую симплекс-таблицу с подсветкой ведущего элемента
+    void print_current_solution() const;                            // Выводит текущее решение задачи
+    void find_alternative_optimal_solutions();                      // Ищет альтернативные оптимальные решения
+    std::vector<Fraction> extract_current_solution() const;         // Извлекает текущие значения переменных решения
+    std::string format_solution_as_string(const std::vector<Fraction>& solution) const;  // Форматирует решение в строку ("(1, 0, 2)")
 
 public:
-    SimplexBigM(const std::vector<Fraction>& obj_func,
-                const std::vector<std::vector<Fraction>>& constraints,
-                const std::vector<std::string>& signs,
-                const std::vector<Fraction>& rhs,
-                const std::string& goal);
+    Simplex(const std::vector<Fraction>& objective_coeffs,
+            const std::vector<std::vector<Fraction>>& constraint_coeffs,
+            const std::vector<std::string>& constraint_signs,
+            const std::vector<Fraction>& constraint_rhs,
+            const std::string& optimization_goal);
 
-    void solve();
+    bool solve_linear_program();
 };
 
 #endif // SIMPLEX_HPP

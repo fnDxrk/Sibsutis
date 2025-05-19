@@ -71,8 +71,11 @@ read_input(const std::string& filename) {
 int main() {
     try {
         auto [obj_func, constraints, signs, rhs, goal] = read_input("input.txt");
-        SimplexBigM solver(obj_func, constraints, signs, rhs, goal);
-        solver.solve();
+        Simplex solver(obj_func, constraints, signs, rhs, goal);
+        if (!solver.solve_linear_program()) {
+            std::cerr << "Задача не имеет допустимого решения или решение не ограничено.\n";
+            return 2;
+        }
     } catch (const std::exception& e) {
         std::cerr << "Ошибка: " << e.what() << std::endl;
         return 1;
