@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "kfs/NSXmyeY=",
+  "success": true,
+  "projectFilePath": "/home/dev/Documents/Sibsutis/Курс 4/Семестр 1/MDP/Lab 1/Lab1.csproj",
+  "expectedPackageFiles": [
+    "/home/dev/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.9/microsoft.aspnetcore.app.ref.9.0.9.nupkg.sha512"
+  ],
+  "logs": []
+}
