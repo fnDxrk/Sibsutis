@@ -6,7 +6,7 @@
         /* Функция получает два одномерных целочисленных массив a, b
         одинаковой длины. Возвращает массив, полученный суммированием
         компонентов массивов a и b с чётными значениями. */
-        public static int[] SumEvenElements(int[] a, int[] b)
+        public static int[] SumEvenElements(int[]? a, int[] b)
         {
             if (a == null || b == null || a.Length != b.Length)
                 throw new ArgumentException("Массивы должны быть ненулевыми и одинаковой длины!");
@@ -23,8 +23,13 @@
         /* Функция получает одномерный массив вещественных переменных и
         целое – параметр сдвига. Функция изменяет массив циклическим сдвигом
         значений его элементов влево на число позиций, равное параметру сдвига. */
-        public static void CyclicShiftLeft(double[] array, int shift)
+        public static void CyclicShiftLeft(double[]? array, int shift)
         {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+            if (array.Length == 0 || shift == 0)
+                return;
+                
             int arraySize = array.Length;
             shift = shift % arraySize;
 
@@ -45,7 +50,7 @@
         /* Функция находит и возвращает индекс начала первого вхождения
         последовательности целых чисел, представленных массивом int[] seq в
         другую последовательность, представленную массивом int[] vec. */
-        public static int FirstSequenceIndex(int[] vec, int[] seq)
+        public static int FindSequenceIndex(int[]? vec, int[]? seq)
         {
             if (vec == null || seq == null)
                 throw new ArgumentNullException("Массивы не должны быть нулевыми!");
