@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="Black">#000000</color>
+    <color name="Chinese_Black">#141414</color>
+    <color name="Eerie_Black">#1B1B1B</color>
+
+    <color name="White">#FFFFFFFF</color>
+    <color name="AntiFlash_White">#F3F3F3</color>
+    <color name="Chinese_White">#E1E1E1</color>
+
+    <color name="Grey">#989898</color>
+
+    <color name="Text">@color/Black</color>
+    <color name="Background">@color/White</color>
+</resources>

@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">My Applications</string>
+    <string name="registration_title">Регистрация игрока</string>
+    <string name="full_name_label">ФИО</string>
+    <string name="full_name_hint">Введите ваше полное имя</string>
+    <string name="gender_label">Пол</string>
+    <string name="male">Мужской</string>
+    <string name="female">Женский</string>
+    <string name="course_label">Курс обучения</string>
+    <string name="difficulty_label">Уровень сложности</string>
+    <string name="easy">Легкий</string>
+    <string name="medium">Средний</string>
+    <string name="hard">Сложный</string>
+    <string name="birth_date_label">Дата рождения</string>
+    <string name="birth_date_hint">Выберите дату</string>
+    <string name="zodiac_label">Знак зодиака</string>
+    <string name="error_empty_full_name">Введите ФИО</string>
+    <string name="error_no_gender">Выберите пол</string>
+    <string name="error_no_course">Выберите курс</string>
+    <string name="error_no_date">Выберите дату рождения</string>
+    <string name="aries">Овен</string>
+    <string name="taurus">Телец</string>
+    <string name="gemini">Близнецы</string>
+    <string name="cancer">Рак</string>
+    <string name="leo">Лев</string>
+    <string name="virgo">Дева</string>
+    <string name="libra">Весы</string>
+    <string name="scorpio">Скорпион</string>
+    <string name="sagittarius">Стрелец</string>
+    <string name="capricorn">Козерог</string>
+    <string name="aquarius">Водолей</string>
+    <string name="pisces">Рыбы</string>
+    <string-array name="courses">
+        <item>1 курс</item>
+        <item>2 курс</item>
+        <item>3 курс</item>
+        <item>4 курс</item>
+    </string-array>
+    <string name="registration_button">Результат</string>
+</resources>
