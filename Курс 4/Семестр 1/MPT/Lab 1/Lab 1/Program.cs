@@ -14,13 +14,13 @@ namespace Lab1
             //     Console.WriteLine(i);
             // }
 
-            double[] task_2 = { 1.0, 2.0, 3.0, 4.0, 5.0 };
-            ArrayOperations.CyclicShiftLeft(task_2, 2);
-            foreach (double i in task_2)
-            {
-                Console.Write(i + " ");
-            }
-            Console.WriteLine();
+            // double[] task_2 = { 1.0, 2.0, 3.0, 4.0, 5.0 };
+            // ArrayOperations.CyclicShiftLeft(task_2, 2);
+            // foreach (double i in task_2)
+            // {
+            //     Console.Write(i + " ");
+            // }
+            // Console.WriteLine();
 
             // int[] vec = { 1, 2, 3, 4, 5 };
             // int[] seq = { 2, 3 };
