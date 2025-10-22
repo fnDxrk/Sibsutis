@@ -6,15 +6,22 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beetles.viewmodel.SettingsViewModel
 
 @Composable
 fun SettingsScreen() {
-    var gameSpeed by remember { mutableFloatStateOf(5f) }
-    var maxBeetles by remember { mutableFloatStateOf(10f) }
-    var bonusInterval by remember { mutableFloatStateOf(5f) }
-    var roundDuration by remember { mutableFloatStateOf(60f) }
+    val context = LocalContext.current
+    val viewModel: SettingsViewModel = viewModel(
+        factory = androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.getInstance(
+            context.applicationContext as android.app.Application
+        )
+    )
+
+    val settings by viewModel.settings.collectAsState()
 
     Column(
         modifier = Modifier
@@ -32,16 +39,19 @@ fun SettingsScreen() {
 
         Card(
             modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            ),
             elevation = CardDefaults.cardElevation(2.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Скорость игры: ${gameSpeed.toInt()}",
+                    text = "Скорость игры: ${settings.gameSpeed.toInt()}",
                     style = MaterialTheme.typography.titleMedium
                 )
                 Slider(
-                    value = gameSpeed,
-                    onValueChange = { gameSpeed = it },
+                    value = settings.gameSpeed,
+                    onValueChange = { viewModel.updateGameSpeed(it) },
                     valueRange = 1f..10f,
                     steps = 8,
                     modifier = Modifier.fillMaxWidth()
@@ -56,16 +66,19 @@ fun SettingsScreen() {
 
         Card(
             modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            ),
             elevation = CardDefaults.cardElevation(2.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Макс. количество тараканов: ${maxBeetles.toInt()}",
+                    text = "Макс. количество тараканов: ${settings.maxBeetles}",
                     style = MaterialTheme.typography.titleMedium
                 )
                 Slider(
-                    value = maxBeetles,
-                    onValueChange = { maxBeetles = it },
+                    value = settings.maxBeetles.toFloat(),
+                    onValueChange = { viewModel.updateMaxBeetles(it.toInt()) },
                     valueRange = 5f..30f,
                     steps = 24,
                     modifier = Modifier.fillMaxWidth()
@@ -80,16 +93,19 @@ fun SettingsScreen() {
 
         Card(
             modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            ),
             elevation = CardDefaults.cardElevation(2.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Интервал бонусов: ${bonusInterval.toInt()} сек",
+                    text = "Интервал бонусов: ${settings.bonusInterval} сек",
                     style = MaterialTheme.typography.titleMedium
                 )
                 Slider(
-                    value = bonusInterval,
-                    onValueChange = { bonusInterval = it },
+                    value = settings.bonusInterval.toFloat(),
+                    onValueChange = { viewModel.updateBonusInterval(it.toInt()) },
                     valueRange = 3f..15f,
                     steps = 11,
                     modifier = Modifier.fillMaxWidth()
@@ -104,16 +120,19 @@ fun SettingsScreen() {
 
         Card(
             modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            ),
             elevation = CardDefaults.cardElevation(2.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Длительность раунда: ${roundDuration.toInt()} сек",
+                    text = "Длительность раунда: ${settings.roundDuration} сек",
                     style = MaterialTheme.typography.titleMedium
                 )
                 Slider(
-                    value = roundDuration,
-                    onValueChange = { roundDuration = it },
+                    value = settings.roundDuration.toFloat(),
+                    onValueChange = { viewModel.updateRoundDuration(it.toInt()) },
                     valueRange = 30f..180f,
                     steps = 14,
                     modifier = Modifier.fillMaxWidth()
@@ -124,13 +143,6 @@ fun SettingsScreen() {
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
-        }
-
-        Button(
-            onClick = { },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Сохранить настройки")
         }
     }
 }

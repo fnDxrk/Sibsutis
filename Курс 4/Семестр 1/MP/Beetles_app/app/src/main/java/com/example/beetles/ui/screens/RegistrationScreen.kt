@@ -14,14 +14,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import java.text.SimpleDateFormat
 import java.util.*
-
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.navigation.NavController
 import com.example.beetles.data.PlayerData
 import com.example.beetles.utils.calculateZodiacSign
 import com.example.beetles.utils.getZodiacImageResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(modifier: Modifier = Modifier) {
+fun RegistrationScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController
+) {
     var fullName by remember { mutableStateOf("") }
     var selectedGender by remember { mutableStateOf("") }
     var selectedCourse by remember { mutableStateOf("") }
@@ -34,7 +38,6 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
 
     val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     val calendar = Calendar.getInstance().apply { timeInMillis = selectedDate }
-
     val isFormValid = fullName.isNotBlank() &&
             selectedGender.isNotBlank() &&
             selectedCourse.isNotBlank() &&
@@ -68,7 +71,6 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
         )
 
         val genderOptions = listOf("Мужской", "Женский")
-
         Column {
             genderOptions.forEach { gender ->
                 Row(
@@ -116,7 +118,6 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
                     .menuAnchor()
                     .fillMaxWidth()
             )
-
             ExposedDropdownMenu(
                 expanded = expandedCourse,
                 onDismissRequest = { expandedCourse = false }
@@ -137,6 +138,7 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
             text = "Уровень сложности: ${difficulty.toInt()}",
             style = MaterialTheme.typography.titleMedium
         )
+
         Slider(
             value = difficulty,
             onValueChange = { difficulty = it },
@@ -167,7 +169,6 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
             val datePickerState = rememberDatePickerState(
                 initialSelectedDateMillis = selectedDate
             )
-
             DatePickerDialog(
                 onDismissRequest = { showDatePicker = false },
                 confirmButton = {
@@ -205,7 +206,6 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
                     birthDate = dateFormatter.format(Date(selectedDate)),
                     zodiacSign = zodiac
                 )
-
                 showZodiacDialog = true
             },
             enabled = isFormValid,
@@ -213,47 +213,59 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
         ) {
             Text("Зарегистрировать")
         }
-    }
 
-    if (showZodiacDialog && playerData != null) {
-        AlertDialog(
-            onDismissRequest = { showZodiacDialog = false },
-            title = {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Ваш знак зодиака:",
-                        style = MaterialTheme.typography.titleMedium,
-                        textAlign = TextAlign.Center
-                    )
-                    Text(
-                        text = playerData!!.zodiacSign,
-                        style = MaterialTheme.typography.headlineLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
+        if (showZodiacDialog && playerData != null) {
+            AlertDialog(
+                onDismissRequest = { showZodiacDialog = false },
+                title = {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Ваш знак зодиака:",
+                            style = MaterialTheme.typography.titleMedium,
+                            textAlign = TextAlign.Center
+                        )
+                        Text(
+                            text = playerData!!.zodiacSign,
+                            style = MaterialTheme.typography.headlineLarge,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                },
+                text = {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = getZodiacImageResource(playerData!!.zodiacSign)),
+                            contentDescription = "Знак зодиака ${playerData!!.zodiacSign}",
+                            modifier = Modifier.size(128.dp),
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Button(
+                            onClick = {
+                                navController.navigate("game")
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Начать игру")
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showZodiacDialog = false }) {
+                        Text("Закрыть")
+                    }
                 }
-            },
-            text = {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = getZodiacImageResource(playerData!!.zodiacSign)),
-                        contentDescription = "Знак зодиака ${playerData!!.zodiacSign}",
-                        modifier = Modifier.size(128.dp)
-                    )
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { showZodiacDialog = false }) {
-                    Text("Закрыть")
-                }
-            }
-        )
+            )
+        }
     }
 }

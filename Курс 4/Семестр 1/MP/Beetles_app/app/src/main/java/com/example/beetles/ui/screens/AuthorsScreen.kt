@@ -59,6 +59,9 @@ fun AuthorsScreen() {
 fun AuthorCard(author: Author) {
     Card(
         modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
+        ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
