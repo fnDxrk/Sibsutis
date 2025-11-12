@@ -23,9 +23,9 @@ select ('2026-01-01'::date - current_date);
 
 -- 6 --
 select distinct 
-to_chat(ord_date, 'DD') as day,
-to_chat(ord_date, 'MM') as month,
-to_chat(ord_date, 'YY') as year
+to_char(ord_date, 'DD') as day,
+to_char(ord_date, 'MM') as month,
+to_char(ord_date, 'YY') as year
 from ord
 
 -- 7 --
