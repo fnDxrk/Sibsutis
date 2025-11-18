@@ -1,8 +1,11 @@
 import re
 import sys
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 from dataclasses import dataclass
 from enum import Enum
 from typing import List
+import numpy as np
 
 
 class TokenType(Enum):
@@ -24,49 +27,184 @@ class Token:
     position: int
 
 
-fork_string = '├──'
-corner_string = '└──'
-wall_string = '│  '
-space_string = '   '
-
-
 class ASTNode:
-    """Класс для узлов синтаксического дерева"""
+    """Класс для узлов абстрактного синтаксического дерева"""
 
     def __init__(self, node_type: str, value: str = "", children: List['ASTNode'] = None):
         self.node_type = node_type
         self.value = value
         self.children = children if children is not None else []
+        self.x = 0  # Позиция X для визуализации
+        self.y = 0  # Позиция Y для визуализации
+        self.width = 0  # Ширина поддерева
 
     def add_child(self, child: 'ASTNode'):
         self.children.append(child)
 
-    def draw_tree(self, prefix: str = "", is_last: bool = True) -> str:
-        """Рекурсивное рисование дерева с вертикальными линиями"""
-        # Текущий узел
-        if self.value:
-            current_line = f"{self.node_type}: {self.value}"
-        else:
-            current_line = self.node_type
+    def calculate_layout(self, x=0, y=0, level=0):
+        """Вычисляет позиции всех узлов для визуализации"""
+        # Уменьшаем масштаб
+        vertical_spacing = 1.2
+        horizontal_spacing = 1.0
 
-        if prefix == "":  # Корневой узел
-            result = current_line + "\n"
-        else:
-            connector = corner_string if is_last else fork_string
-            result = prefix + connector + current_line + "\n"
+        self.y = y
 
-        # Новый префикс для дочерних
-        if is_last:
-            new_prefix = prefix + space_string
-        else:
-            new_prefix = prefix + wall_string
+        if not self.children:
+            # Листовой узел
+            self.x = x
+            self.width = 0.6  # Минимальная ширина для листа
+            return x + 0.8, y  # Возвращаем следующую позицию
 
-        # Дети
+        # Сначала вычисляем layout для всех детей
+        child_x = x
+        max_child_y = y - vertical_spacing
+
+        child_widths = []
+        for child in self.children:
+            child_x, child_y = child.calculate_layout(child_x, y - vertical_spacing, level + 1)
+            child_widths.append(child.width)
+            # Добавляем расстояние между детьми
+            child_x += horizontal_spacing * 0.3
+
+        # Вычисляем общую ширину поддерева
+        total_children_width = sum(child_widths) + horizontal_spacing * 0.3 * (len(self.children) - 1)
+
+        # Центрируем текущий узел над детьми
+        if self.children:
+            first_child = self.children[0]
+            last_child = self.children[-1]
+            self.x = (first_child.x + last_child.x) / 2
+            self.width = max(0.8, total_children_width)  # Минимальная ширина
+
+        return x + total_children_width, y
+
+    def get_tree_bounds(self):
+        """Возвращает границы дерева (min_x, max_x, min_y, max_y)"""
+        if not self.children:
+            return self.x - 0.3, self.x + 0.3, self.y - 0.2, self.y + 0.2
+
+        min_x, max_x, min_y, max_y = float('inf'), float('-inf'), float('inf'), float('-inf')
+
+        # Границы текущего узла
+        min_x = min(min_x, self.x - 0.4)
+        max_x = max(max_x, self.x + 0.4)
+        min_y = min(min_y, self.y - 0.2)
+        max_y = max(max_y, self.y + 0.2)
+
+        # Границы детей
+        for child in self.children:
+            c_min_x, c_max_x, c_min_y, c_max_y = child.get_tree_bounds()
+            min_x = min(min_x, c_min_x)
+            max_x = max(max_x, c_max_x)
+            min_y = min(min_y, c_min_y)
+            max_y = max(max_y, c_max_y)
+
+        return min_x, max_x, min_y, max_y
+
+    def plot_tree(self, ax, level=0):
+        """Рекурсивно рисуем дерево"""
+
+        # Цвета
+        colors = {
+            'S': '#FF6B6B',  # Красный
+            'E': '#4ECDC4',  # Бирюзовый
+            'T': '#45B7D1',  # Синий
+            "T'": '#96CEB4',  # Зеленый
+            'F': '#FECA57',  # Желтый
+            'UNARY_MINUS': '#FA003F',
+            'OPERATOR': '#FF9FF3',  # Розовый
+            'NUMBER': '#54A0FF',  # Голубой
+            'IDENTIFIER': '#5F27CD',  # Фиолетовый
+            'EPSILON': '#C8D6E5'  # Серый
+        }
+
+        node_color = colors.get(self.node_type, '#E0E0E0')
+        text_color = 'white' if self.node_type in ['S', 'E', 'T', "T'", 'F'] else 'black'
+
+        # Текст узла
+        display_value = self.value
+        if display_value and len(display_value) > 8:
+            display_value = display_value[:8] + "..."
+
+        node_text = f"{self.node_type}"
+        if display_value:
+            node_text += f"\n{display_value}"
+
+        # Рисуем узел - уменьшаем размер
+        rect_width = 0.7
+        rect_height = 0.35
+
+        rect = patches.Rectangle(
+            (self.x - rect_width / 2, self.y - rect_height / 2), rect_width, rect_height,
+            linewidth=1.5, edgecolor='black', facecolor=node_color, alpha=0.9,
+            zorder=3  # Узлы поверх линий
+        )
+        ax.add_patch(rect)
+
+        # Текст узла
+        font_size = 8 if display_value else 9
+        ax.text(self.x, self.y, node_text, ha='center', va='center',
+                fontsize=font_size, fontweight='bold', color=text_color, zorder=4)
+
+        # Рисуем связи с детьми
         for i, child in enumerate(self.children):
-            is_last_child = i == len(self.children) - 1
-            result += child.draw_tree(new_prefix, is_last_child)
+            # Линия к ребенку
+            ax.plot([self.x, child.x], [self.y - rect_height / 2, child.y + rect_height / 2],
+                    'black', linewidth=1.5, alpha=0.8, zorder=2)
 
-        return result
+            # Рекурсивно рисуем детей
+            child.plot_tree(ax, level + 1)
+
+    def display_matplotlib_tree(self, expression):
+        """Отображает дерево"""
+        # Создаем фигуру
+        fig, ax = plt.subplots(figsize=(12, 8))
+
+        # Вычисляем layout
+        self.calculate_layout()
+
+        # Получаем границы дерева
+        min_x, max_x, min_y, max_y = self.get_tree_bounds()
+
+        # Добавляем отступы
+        x_padding = 1.0
+        y_padding = 1.0
+
+        # Настройки графика с уменьшенным масштабом
+        ax.set_xlim(min_x - x_padding, max_x + x_padding)
+        ax.set_ylim(min_y - y_padding, max_y + y_padding)
+        ax.set_aspect('equal')
+        ax.axis('off')  # Скрываем оси
+
+        # Рисуем дерево
+        self.plot_tree(ax)
+
+        # Заголовок
+        plt.title(f'Синтаксическое дерево для: "{expression}"',
+                  fontsize=14, fontweight='bold', pad=20)
+
+        # Легенда
+        legend_elements = [
+            patches.Patch(color='#FF6B6B', label='S - Выражение'),
+            patches.Patch(color='#4ECDC4', label='E - Операции +/-'),
+            patches.Patch(color='#45B7D1', label='T - Терм'),
+            patches.Patch(color='#96CEB4', label="T' - Операции */"),
+            patches.Patch(color='#FECA57', label='F - Фактор'),
+            patches.Patch(color='#FF9FF3', label='OPERATOR - Оператор'),
+            patches.Patch(color='#54A0FF', label='NUMBER - Число'),
+            patches.Patch(color='#5F27CD', label='IDENTIFIER - Идентификатор'),
+            patches.Patch(color='#C8D6E5', label='EPSILON - Пусто')
+        ]
+
+        ax.legend(handles=legend_elements, loc='upper right', bbox_to_anchor=(1.15, 1),
+                  fontsize=8, framealpha=0.9)
+
+        # Улучшаем layout
+        plt.tight_layout()
+
+        # ax.grid(True, alpha=0.3)
+
+        plt.show()
 
     def to_bracket_notation(self) -> str:
         """Скобочная нотация"""
@@ -75,13 +213,6 @@ class ASTNode:
 
         children_str = " ".join(child.to_bracket_notation() for child in self.children)
         return f"({self.node_type}{':' + self.value if self.value else ''} {children_str})"
-
-    def display_tree(self):
-        """Выводит дерево в консоль"""
-        print("🌳 Синтаксическое дерево:")
-        print("─" * 50)
-        tree_str = self.draw_tree()
-        print(tree_str)
 
     def __str__(self) -> str:
         if self.value:
@@ -103,7 +234,7 @@ class ArithmeticParser:
         self.current_token_index = 0
         self.current_token = None
 
-    def tokenize(self):
+    def tokenize(self) -> List[Token]:
         """Лексический анализатор - разбивает строку на токены"""
         token_specification = [
             (TokenType.NUMBER, r'\d+'),
@@ -119,17 +250,17 @@ class ArithmeticParser:
 
         tokens = []
         position = 0
-        expression = self.expression.strip() #удаляем пробелы
+        expression = self.expression.strip()
 
         while position < len(expression):
-            if expression[position].isspace(): #проверка на пробелы в начале
+            if expression[position].isspace():
                 position += 1
                 continue
 
             match = None
             for token_type, pattern in token_specification:
                 regex = re.compile(pattern)
-                match = regex.match(expression, position) #ищем совпадение
+                match = regex.match(expression, position)
                 if match:
                     value = match.group(0)
                     if token_type != TokenType.EOF:
@@ -152,7 +283,7 @@ class ArithmeticParser:
         return Token(TokenType.EOF, '', len(self.expression))
 
     def match(self, expected_types) -> Token:
-        """Проверяет соответствие текущего токена с ожидаемым типом"""
+        """Проверяет соответствие текущего токена ожидаемому типу"""
         if not isinstance(expected_types, list):
             expected_types = [expected_types]
 
@@ -168,9 +299,7 @@ class ArithmeticParser:
         )
 
     def parse(self) -> ASTNode:
-        """Основной метод парсинга
-           Вызываем parse_S - начало грамматики
-        """
+        """Основной парсинг"""
         try:
             self.tokens = self.tokenize()
             self.current_token_index = 0
@@ -189,7 +318,7 @@ class ArithmeticParser:
 
     def parse_S(self) -> ASTNode:
         """S -> T E"""
-        node = ASTNode("   S")
+        node = ASTNode("S")
         node.add_child(self.parse_T())
         node.add_child(self.parse_E())
         return node
@@ -233,7 +362,12 @@ class ArithmeticParser:
         """F -> ( S ) | number | id"""
         node = ASTNode("F")
 
-        if self.current_token.type == TokenType.LPAREN:
+        if self.current_token.type == TokenType.MINUS:
+            operator_token = self.match(TokenType.MINUS)
+            minus_node = ASTNode("UNARY_MINUS", operator_token.value)
+            minus_node.add_child(self.parse_F())
+            node.add_child(minus_node)
+        elif self.current_token.type == TokenType.LPAREN:
             self.match(TokenType.LPAREN)
             node.add_child(self.parse_S())
             self.match(TokenType.RPAREN)
@@ -276,12 +410,13 @@ def main():
 
             print("✅ Выражение корректно.")
 
-            # Отображаем дерево в консоли
-            syntax_tree.display_tree()
-
             print("\nСкобочная нотация:")
             print("─" * 30)
             print(syntax_tree.to_bracket_notation())
+
+            # Отображаем графическое дерево
+            print("Строим графическое дерево...")
+            syntax_tree.display_matplotlib_tree(expression)
 
         except ParserError as e:
             print(f"❌ {e.message}")
@@ -292,37 +427,5 @@ def main():
             print(f"Неожиданная ошибка: {e}")
 
 
-def run_demo():
-    """Демонстрация работы с разными выражениями"""
-    demo_expressions = [
-        "2 + 3 * 4",
-        "a * (b - 10)",
-        "(x + y) * 2 - z / 3",
-        "42",
-        "simple_variable",
-        "a + b * c - d / (e + f)"
-    ]
-
-    print("Демонстрация работы парсера:")
-    print("=" * 50)
-
-    for expr in demo_expressions:
-        print(f"\nВыражение: {expr}")
-        print("─" * (len(expr) + 12))
-
-        try:
-            parser = ArithmeticParser(expr)
-            tree = parser.parse()
-            print("✅ Корректно")
-            tree.display_tree()
-            print()
-
-        except ParserError as e:
-            print(f"❌ Ошибка: {e.message.splitlines()[0]}")
-
-
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "demo":
-        run_demo()
-    else:
-        main()
+    main()
