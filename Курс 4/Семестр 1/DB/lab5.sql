@@ -18,8 +18,8 @@ group by s.name;
 -- 4 --
 select distinct p.pnum, c.cnum
 from prod as p
-cross join cust as c
-where p.city = c.city;
+inner join cust as c on p.city = c.city
+group by city;
 
 -- 5 --
 select * from ord
