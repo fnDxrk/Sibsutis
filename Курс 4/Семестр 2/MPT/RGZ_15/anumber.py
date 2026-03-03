@@ -200,8 +200,6 @@ class TFrac(TANumber):
     def _update_string(self):
         if self.numerator == 0:
             self.string = "0"
-        elif self.denominator == 1:
-            self.string = str(self.numerator)
         else:
             self.string = f"{self.numerator}/{self.denominator}"
 
@@ -245,13 +243,16 @@ class TFrac(TANumber):
     def sqr(self):
         n = self.numerator**2
         d = self.denominator**2
-        return TFrac(f"{n}/{d}")
+        result = TFrac(f"{n}/{d}")
+        result._normalize()
+        return result
 
     def inv(self):
         if self.is_zero():
             raise ZeroDivisionError("Обратная дробь к нулю не существует")
-        return TFrac(f"{self.denominator}/{self.numerator}")
-
+        result = TFrac(f"{self.denominator}/{self.numerator}")
+        result._normalize()
+        return result
 
 @dataclass
 class TComp(TANumber):

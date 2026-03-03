@@ -129,6 +129,7 @@ class TCtrl:
         self._pending_op = None
         self._pending_num = None
         self._last_operand = None
+        self._repeated = False
         self._need_clear_editor = False
         self.processor.oprtn_clear()
         self.processor.clear_error()
