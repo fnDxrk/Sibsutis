@@ -70,6 +70,8 @@ class TCtrl:
 
             if cmd in '+-*/':
                 current_num = self._get_current_number()
+                self._repeated = False
+                self._last_operand = None
 
                 if self._pending_op is not None and self._pending_num is not None:
                     self.processor.lop_res = self._pending_num
@@ -115,6 +117,7 @@ class TCtrl:
                     self.history.append(f"{self._pending_num.string} {self._pending_op} {self._last_operand.string} = {result.string}")
                     self.editor.string = result.string
                     self._pending_num = result
+                    # self._pending_op = None
 
                     if self._repeated:
                         pass
@@ -140,6 +143,7 @@ class TCtrl:
         self._pending_op = None
         self._pending_num = None
         self._last_operand = None
+        self._repeated = False
         self._need_clear_editor = False
         self.processor.oprtn_clear()
         self.processor.clear_error()

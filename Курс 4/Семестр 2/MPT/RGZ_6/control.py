@@ -65,6 +65,8 @@ class TCtrl:
 
             if cmd in '+-*/':
                 current_num = self._get_current_number()
+                self._repeated = False
+                self._last_operand = None
 
                 if self._pending_op is not None and self._pending_num is not None:
                     self.processor.lop_res = self._pending_num
