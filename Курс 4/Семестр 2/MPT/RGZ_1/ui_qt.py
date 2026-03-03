@@ -13,6 +13,7 @@ class UniversalCalculator(QMainWindow):
         self.setGeometry(100, 100, 440, 700)
         self.setMinimumSize(400, 650)
 
+        self.digit_buttons = {}
         self.mode = "p"
         self.ctrl = TCtrl(self.mode)
 
@@ -38,14 +39,20 @@ class UniversalCalculator(QMainWindow):
         clear_action.triggered.connect(self.clear_history)
         history_menu.addAction(clear_action)
 
+        # Настройки
+        settings_menu = menubar.addMenu("Настройки")
+        settings_action = QAction("Основание СС", self)
+        settings_action.triggered.connect(self.show_settings)
+        settings_menu.addAction(settings_action)
+
         # Тулбар режимов
-        toolbar = QToolBar("Режимы")
-        self.addToolBar(toolbar)
-        toolbar.addWidget(QLabel("Режим:"))
-        self.mode_combo = QComboBox()
-        self.mode_combo.addItems(["p-ичные", "Дроби", "Комплекс"])
-        self.mode_combo.currentTextChanged.connect(self.change_mode)
-        toolbar.addWidget(self.mode_combo)
+        # toolbar = QToolBar("Режимы")
+        # self.addToolBar(toolbar)
+        # toolbar.addWidget(QLabel("Режим:"))
+        # self.mode_combo = QComboBox()
+        # self.mode_combo.addItems(["p-ичные", "Дроби", "Комплекс"])
+        # self.mode_combo.currentTextChanged.connect(self.hange_mode)
+        # toolbar.addWidget(self.mode_combo)
 
         central = QWidget()
         self.setCentralWidget(central)
@@ -93,6 +100,8 @@ class UniversalCalculator(QMainWindow):
         for row_group in buttons:
             for text, row, col in row_group:
                 btn = self.create_button(text, row, col)
+                if text.isdigit():
+                    self.digit_buttons[int(text)] = btn
                 grid.addWidget(btn, row, col)
 
         # Кнопка "="
@@ -115,6 +124,7 @@ class UniversalCalculator(QMainWindow):
         grid.addLayout(eq_layout, 6, 0, 1, 4)
 
         layout.addLayout(grid)
+        self.update_buttons()
 
     def create_button(self, text: str, row: int, col: int):
         btn = QPushButton(text)
@@ -142,8 +152,24 @@ class UniversalCalculator(QMainWindow):
             QPushButton:pressed {{ background: {c1}88; }}
         """)
 
+        btn.setStyleSheet(f"""
+            QPushButton {{
+                background: qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 {c1},stop:1 {c2});
+                border: 2px solid {c2}; border-radius: 10px; color: white;
+            }}
+            QPushButton:hover {{ background: {c2}; }}
+            QPushButton:pressed {{ background: {c1}88; }}
+            QPushButton:disabled {{ background: #444; border: 2px solid #333; color: #666; }}
+        """)
+
         btn.clicked.connect(lambda _, t=text: self.button_click(t))
         return btn
+
+    def update_buttons(self):
+        base = self.ctrl.base
+        for digit, btn in self.digit_buttons.items():
+            enabled = digit < base
+            btn.setEnabled(enabled)
 
     def button_click(self, text):
         try:
@@ -169,11 +195,11 @@ class UniversalCalculator(QMainWindow):
         except Exception as e:
             self.display.setText(f"Ошибка: {e}")
 
-    def change_mode(self, text):
-        modes = {"p-ичные": "p", "Дроби": "f", "Комплекс": "c"}
-        self.mode = modes[text]
-        self.ctrl = TCtrl(self.mode)
-        self.update_display()
+    # def change_mode(self, text):
+    #     modes = {"p-ичные": "p", "Дроби": "f", "Комплекс": "c"}
+    #     self.mode = modes[text]
+    #     self.ctrl = TCtrl(self.mode)
+    #     self.update_display()
 
     def update_display(self):
         text = self.ctrl.display or "0"
@@ -198,6 +224,20 @@ class UniversalCalculator(QMainWindow):
 
         text = "\n".join(reversed(self.ctrl.history))
         QMessageBox.information(self, "История вычислений", text)
+
+    def show_settings(self):
+        current_base = self.ctrl.base
+        base, ok = QInputDialog.getInt(
+            self, "Настройки", "Основание системы счисления (2–16):",
+            value=current_base, min=2, max=16
+        )
+        if ok:
+            self.ctrl.set_base(base)
+            if ok:
+                self.ctrl.set_base(base)
+                self.update_buttons()
+                self.update_display()
+            self.update_display()
 
     def clear_history(self):
         self.ctrl.history.clear()

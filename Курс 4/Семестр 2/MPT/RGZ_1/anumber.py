@@ -78,14 +78,49 @@ class TPNumber(TANumber):
         self.base = base
 
     def _to_float(self):
-        return float(self.string.replace(DECIMAL_SEPARATOR, "."))
+        s = self.string.replace(DECIMAL_SEPARATOR, ".")
+        if "." in s:
+            int_part, frac_part = s.split(".")
+            negative = int_part.startswith("-")
+            if negative:
+                int_part = int_part[1:]
+            value = int(int_part, self.base)
+            for i, ch in enumerate(frac_part):
+                value += int(ch, self.base) / (self.base ** (i + 1))
+            return -value if negative else value
+        else:
+            return float(int(s, self.base))
 
     def _from_float(self, x: float):
         if x == 0.0:
             return "0"
-        s = f"{x:g}".replace(".", DECIMAL_SEPARATOR)
-        return s
+        negative = x < 0
+        x = abs(x)
+        int_part = int(x)
+        frac_part = x - int_part
 
+        int_str = ""
+        n = int_part
+        if n == 0:
+            int_str = "0"
+        while n > 0:
+            int_str = "0123456789abcdef"[n % self.base] + int_str
+            n //= self.base
+
+        if frac_part < 1e-10:
+            result = int_str
+        else:
+            frac_str = ""
+            for _ in range(8):
+                frac_part *= self.base
+                digit = int(frac_part)
+                frac_str += "0123456789abcdef"[digit]
+                frac_part -= digit
+                if frac_part < 1e-10:
+                    break
+            result = int_str + DECIMAL_SEPARATOR + frac_str
+
+        return ("-" + result) if negative else result
 
     def is_zero(self):
         try:

@@ -12,6 +12,7 @@ class TCtrl:
     def __init__(self, mode: str = "p"):
         self.mode = mode
         self._state = 0
+        self.base = 10
 
         if mode == "p":
             self.editor: AEditor = PEditor()
@@ -44,12 +45,7 @@ class TCtrl:
 
     def _get_current_number(self):
         editor_str = self.editor.string.strip() or "0"
-        if self.mode == "p":
-            return TPNumber(editor_str)
-        elif self.mode == "f":
-            return TFrac(editor_str)
-        else:
-            return TComp(editor_str)
+        return TPNumber(editor_str, self.base)
 
     def do_calc_command(self, cmd: str):
         try:
@@ -176,6 +172,14 @@ class TCtrl:
             return self.editor.string
         except Exception as e:
             return f"ERR: {e}"
+
+    def set_base(self, base: int):
+        self.base = base
+        self.editor.clear()
+        zero_num = TPNumber("0", base)
+        self.processor = TProc(zero_num, zero_num)
+        self.memory = TMemory(zero_num)
+        self._reset_state()
 
     def _load_history(self):
         if os.path.exists(HISTORY_FILE):
