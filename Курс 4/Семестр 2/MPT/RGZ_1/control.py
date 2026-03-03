@@ -2,7 +2,10 @@ from anumber import TPNumber, TFrac, TComp
 from aeditor import AEditor, PEditor, FEditor, CEditor
 from memory import TMemory
 from processor import TProc, TOprtn, TFunc
+import json
+import os
 
+HISTORY_FILE = "history.json"
 
 class TCtrl:
 
@@ -20,7 +23,8 @@ class TCtrl:
         zero_num = TPNumber("0")
         self.processor = TProc(zero_num, zero_num)
         self.memory = TMemory(zero_num)
-        
+        self.history = self._load_history()
+
         self._pending_op = None
         self._pending_num = None
         self._last_operand = None
@@ -112,6 +116,7 @@ class TCtrl:
                     self.processor.oprtn_run()
 
                     result = self.processor.lop_res
+                    self.history.append(f"{self._pending_num.string} {self._pending_op} {self._last_operand.string} = {result.string}")
                     self.editor.string = result.string
                     self._pending_num = result
 
@@ -172,3 +177,12 @@ class TCtrl:
         except Exception as e:
             return f"ERR: {e}"
 
+    def _load_history(self):
+        if os.path.exists(HISTORY_FILE):
+            with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return []
+
+    def save_history(self):
+        with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(self.history, f, ensure_ascii=False)

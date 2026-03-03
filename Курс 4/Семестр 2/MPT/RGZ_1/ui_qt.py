@@ -23,10 +23,20 @@ class UniversalCalculator(QMainWindow):
         # Меню
         menubar = self.menuBar()
         help_menu = menubar.addMenu("Справка")
-        help_action = QAction("Справка (F1)", self)
+        help_action = QAction("Справка", self)
         help_action.setShortcut("F1")
         help_action.triggered.connect(self.show_help)
         help_menu.addAction(help_action)
+
+        # История
+        history_menu = menubar.addMenu("История")
+        history_action = QAction("Показать историю", self)
+        history_action.setShortcut("F2")
+        history_action.triggered.connect(self.show_history)
+        history_menu.addAction(history_action)
+        clear_action = QAction("Очистить историю", self)
+        clear_action.triggered.connect(self.clear_history)
+        history_menu.addAction(clear_action)
 
         # Тулбар режимов
         toolbar = QToolBar("Режимы")
@@ -181,6 +191,19 @@ class UniversalCalculator(QMainWindow):
                                 "Комплекс: 1 . 2 + 3 . 4 = 4 i * 6\n"
                                 "Память: MS/M+/MR/MC\n\n"
                                 "F1 – справка")
+    def show_history(self):
+        if not self.ctrl.history:
+            QMessageBox.information(self, "История", "История пуста")
+            return
+
+        text = "\n".join(reversed(self.ctrl.history))
+        QMessageBox.information(self, "История вычислений", text)
+
+    def clear_history(self):
+        self.ctrl.history.clear()
+        self.ctrl.save_history()
+        QMessageBox.information(self, "История", "История очищена")
+
     def show_context_menu(self, pos):
         menu = QMenu(self)
 
@@ -222,6 +245,9 @@ class UniversalCalculator(QMainWindow):
             self.copy_to_clipboard()
         super().keyPressEvent(event)
 
+    def closeEvent(self, event):
+        self.ctrl.save_history()
+        super().closeEvent(event)
 
 def main():
     app = QApplication(sys.argv)
