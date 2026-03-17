@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}{{ car.brand }} {{ car.name }}{% endblock %}
+{% block content %}
+<h1>{{ car.brand }} {{ car.name }}</h1>
+<div class="card">
+  <p><strong>Описание:</strong> {{ car.description or '—' }}</p>
+  <p><strong>Цена:</strong> {{ "%.2f"|format(car.price) }} ₽</p>
+  <p><strong>На складе:</strong> {{ car.stock }} шт.</p>
+  <p><strong>Средний рейтинг:</strong>
+    {% if rating %}<span class="star">★</span> {{ rating }}/5
+    {% else %}Нет оценок{% endif %}
+  </p>
+</div>
+
+<h2>Отзывы ({{ reviews|length }})</h2>
+{% for r in reviews %}
+<div class="card">
+  <strong>{{ r.author }}</strong>
+  <span class="star">{% for i in range(r.rating) %}★{% endfor %}</span>
+  <small>{{ r.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+  <p>{{ r.text }}</p>
+</div>
+{% else %}
+  <p>Отзывов пока нет. Будьте первым!</p>
+{% endfor %}
+
+<h2>Оставить отзыв</h2>
+<form method="POST" novalidate>
+  {{ form.hidden_tag() }}
+
+  <label>{{ form.author.label }}</label>
+  {{ form.author(placeholder='Аноним') }}
+
+  <label>{{ form.text.label }}</label>
+  {{ form.text(rows=4) }}
+  {% for e in form.text.errors %}<p class="error">{{ e }}</p>{% endfor %}
+
+  <label>{{ form.rating.label }}</label>
+  {{ form.rating() }}
+
+  <button type="submit">Отправить отзыв</button>
+</form>
+{% endblock %}
+

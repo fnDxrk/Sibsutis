@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Поиск{% endblock %}
+{% block content %}
+<h1>🔍 Поиск автомобилей</h1>
+<form method="GET" novalidate>
+  <label>{{ form.query.label }}</label>
+  {{ form.query(placeholder='Например: Camry') }}
+
+  <label>{{ form.brand_query.label }}</label>
+  {{ form.brand_query(placeholder='Например: Toyota') }}
+
+
+  <label>{{ form.min_rating.label }}</label>
+  {{ form.min_rating() }}
+
+  <button type="submit">Найти</button>
+</form>
+
+{% if results is none %}
+  <p style="margin-top:20px; color:gray;">Введите запрос для поиска.</p>
+{% elif results|length == 0 %}
+  <p style="margin-top:20px;">Ничего не найдено.</p>
+{% else %}
+  <h2>Результаты ({{ results|length }})</h2>
+  <table>
+    <thead>
+      <tr><th>Название</th><th>Марка</th><th>Цена</th><th>Рейтинг</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for item in results %}
+      <tr>
+        <td>{{ item.car.name }}</td>
+        <td>{{ item.car.brand }}</td>
+        <td>{{ "%.2f"|format(item.car.price) }} ₽</td>
+        <td>
+          {% if item.avg_rating %}
+            <span class="star">★</span> {{ item.avg_rating }}/5
+          {% else %}Нет оценок{% endif %}
+        </td>
+        <td><a href="{{ url_for('car_detail', product_id=item.car.id) }}">Подробнее →</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+{% endblock %}
+

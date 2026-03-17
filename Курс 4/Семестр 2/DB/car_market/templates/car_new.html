@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Новый автомобиль{% endblock %}
+{% block content %}
+<h1>Добавить автомобиль</h1>
+<form method="POST" novalidate>
+  {{ form.hidden_tag() }}
+
+  <label>{{ form.name.label }}</label>
+  {{ form.name() }}
+  {% for e in form.name.errors %}<p class="error">{{ e }}</p>{% endfor %}
+
+  <label>{{ form.brand.label }}</label>
+  {{ form.brand() }}
+  {% for e in form.brand.errors %}<p class="error">{{ e }}</p>{% endfor %}
+
+  <label>{{ form.description.label }}</label>
+  {{ form.description(rows=4) }}
+
+  <label>{{ form.price.label }}</label>
+  {{ form.price() }}
+  {% for e in form.price.errors %}<p class="error">{{ e }}</p>{% endfor %}
+
+  <label>{{ form.stock.label }}</label>
+  {{ form.stock() }}
+  {% for e in form.stock.errors %}<p class="error">{{ e }}</p>{% endfor %}
+
+  <button type="submit">Сохранить</button>
+</form>
+{% endblock %}
+

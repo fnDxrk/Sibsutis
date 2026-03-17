@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Все автомобили{% endblock %}
+{% block content %}
+<h1>Площадка продажи автомобилей</h1>
+
+{% if cars %}
+<table>
+  <thead>
+    <tr><th>Название</th><th>Марка</th><th>Цена</th><th>На складе</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for car in cars %}
+    <tr>
+      <td>{{ car.name }}</td>
+      <td>{{ car.brand }}</td>
+      <td>{{ "%.2f"|format(car.price) }} ₽</td>
+      <td>{{ car.stock }} шт.</td>
+      <td><a href="{{ url_for('car_detail', product_id=car.id) }}">Подробнее →</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p>Автомобилей пока нет. <a href="{{ url_for('car_new') }}">Добавить первый?</a></p>
+{% endif %}
+{% endblock %}
+
