@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Популярные авто{% endblock %}
+{% block content %}
+<h1>Топ популярных автомобилей</h1>
+
+{% if popular_cars %}
+<table>
+  <thead>
+    <tr>
+      <th>№</th><th>Марка</th><th>Модель</th><th>Цена</th><th>Просмотры</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in popular_cars %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ item.car.brand }}</td>
+      <td>{{ item.car.name }}</td>
+      <td>{{ "%.2f"|format(item.car.price) }} ₽</td>
+      <td>{{ item.views }}</td>
+      <td><a href="{{ url_for('car_detail', product_id=item.car.id) }}">Подробнее →</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Нет данных о популярных автомобилях. Откройте несколько детальных страниц!</p>
+{% endif %}
+{% endblock %}
+
